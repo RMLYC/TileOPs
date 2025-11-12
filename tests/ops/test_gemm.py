@@ -1,12 +1,20 @@
 import argparse
-from top.ops import Gemm
+from top.ops import Gemm, Gemm_bwd
 from top.utils import str2dtype
-from benchmarks import gemm_benchmark
+from benchmarks import gemm_benchmark, gemm_bwd_benchmark
 
 
 def test_gemm(M, N, K, dtype, tune=False):
     op = Gemm(M, N, K, dtype, tune=tune)
     benchmark = gemm_benchmark(M, N, K, dtype)
+
+    inputs = benchmark.gen_inputs()
+    benchmark.check(op, *inputs)
+    benchmark.profile(op, *inputs)
+
+def test_gemm_bwd(M, N, K, dtype, tune=False):
+    op = Gemm_bwd(M, N, K, dtype, tune=tune)
+    benchmark = gemm_bwd_benchmark(M, N, K, dtype)
 
     inputs = benchmark.gen_inputs()
     benchmark.check(op, *inputs)

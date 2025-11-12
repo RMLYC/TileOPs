@@ -6,6 +6,7 @@ import torch
 from top.utils import get_sm_version
 from top.kernels import Kernel
 
+__all__ = ["gemm_kernel", "gemm_bwd_kernel"]
 
 def _gemm_kernel(M, N, K, dtype='float16'):
     accum_dtype = "float"
@@ -146,7 +147,7 @@ def _gemm_bwd_kernel(M, N, K, dtype='float16'):
                 for n in T.Pipelined(T.ceildiv(N, block_N), num_stages=num_stages):
                     T.copy(B[by * block_K, n * block_N], B_shared)
                     T.copy(dC[bx * block_M, n * block_N], dC_shared)
-                    T.gemm(dC_shared, B_shared, dA_local, transpose_b=True)
+                    T.gemm(dC_shared, B_shared, dA_local, transpose_B=True)
                 
                 T.copy(dA_local, dA_shared)
                 T.copy(dA_shared, dA[bx * block_M, by * block_K])
@@ -173,7 +174,7 @@ def _gemm_bwd_kernel(M, N, K, dtype='float16'):
                 for m in T.Pipelined(T.ceildiv(M, block_M), num_stages=num_stages):
                     T.copy(A[m * block_M, by * block_K], A_shared)
                     T.copy(dC[m * block_M, bx * block_N], dC_shared)
-                    T.gemm(A_shared, dC_shared, dB_local, transpose_a=True)
+                    T.gemm(A_shared, dC_shared, dB_local, transpose_A=True)
                 
                 T.copy(dB_local, dB_shared)
                 T.copy(dB_shared, dB[by * block_K, bx * block_N])
@@ -226,7 +227,7 @@ class gemm_bwd_kernel(Kernel):
                 "block_M": 128,
                 "block_N": 256,
                 "block_K": 64,
-                "num_stages": 3,
+                "num_stages": 2,
                 "threads": 256,
                 "enable_rasteration": True
             }

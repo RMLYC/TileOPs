@@ -1,9 +1,9 @@
 import torch
 from .op import Op
-from top.kernels import gemm_kernel, gemm_bwd_kernel,Kernel
+from top.kernels import gemm_kernel, gemm_bwd_kernel, Kernel
 from typing import Optional, Dict
 
-__all__ = ['Gemm']
+__all__ = ['Gemm', 'Gemm_bwd']
 
 
 class Gemm(Op):

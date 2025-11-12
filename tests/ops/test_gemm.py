@@ -32,3 +32,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     test_gemm(args.M, args.N, args.K, str2dtype[args.dtype], args.tune)
+    test_gemm_bwd(args.M, args.N, args.K, str2dtype[args.dtype], args.tune)

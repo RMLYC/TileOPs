@@ -120,7 +120,7 @@ def _mha_fwd_wrapped_kernel(
     Q: torch.Tensor,
     K: torch.Tensor,
     V: torch.Tensor,
-) -> Tuple[torch.Tensor, torch.Tensor]:
+) -> tuple[torch.Tensor, torch.Tensor]:
     return _mha_fwd_kernel(batch, heads, seq_len, dim, is_causal, dtype)(
         block_M, block_N, num_stages, threads
     )(Q, K, V)
@@ -144,7 +144,7 @@ class mha_fwd_kernel(Kernel):
         dim,
         is_causal,
         dtype,
-        config: Optional[dict] = None,
+        config: dict | None = None,
         tune=False,
     ):
         super().__init__()
@@ -373,7 +373,7 @@ def _mha_fwd_wgmma_pipelined_wrapped_kernel(
     Q: torch.Tensor,
     K: torch.Tensor,
     V: torch.Tensor,
-) -> Tuple[torch.Tensor, torch.Tensor]:
+) -> tuple[torch.Tensor, torch.Tensor]:
     return _mha_fwd_wgmma_pipelined_kernel(batch, heads, seq_len, dim, is_causal, dtype)(
         block_M, block_N, num_stages, threads
     )(Q, K, V)
@@ -397,7 +397,7 @@ class mha_fwd_wgmma_pipelined_kernel(Kernel):
         dim,
         is_causal,
         dtype,
-        config: Optional[dict] = None,
+        config: dict | None = None,
         tune=False,
     ):
         super().__init__()
@@ -560,7 +560,7 @@ def _gqa_fwd_wrapped_kernel(
     Q: torch.Tensor,
     K: torch.Tensor,
     V: torch.Tensor,
-) -> Tuple[torch.Tensor, torch.Tensor]:
+) -> tuple[torch.Tensor, torch.Tensor]:
     return _gqa_fwd_kernel(batch, heads, heads_kv, seq_len, dim, is_causal, dtype)(
         block_M, block_N, num_stages, threads
     )(Q, K, V)
@@ -598,7 +598,7 @@ class gqa_fwd_kernel(Kernel):
         dim,
         is_causal,
         dtype,
-        config: Optional[dict] = None,
+        config: dict | None = None,
         tune=False,
     ):
         super().__init__()
@@ -842,7 +842,7 @@ def _gqa_fwd_wgmma_pipelined_wrapped_kernel(
     Q: torch.Tensor,
     K: torch.Tensor,
     V: torch.Tensor,
-) -> Tuple[torch.Tensor, torch.Tensor]:
+) -> tuple[torch.Tensor, torch.Tensor]:
     return _gqa_fwd_wgmma_pipelined_kernel(batch, heads, heads_kv, seq_len, dim, is_causal, dtype)(
         block_M, block_N, num_stages, threads
     )(Q, K, V)
@@ -880,7 +880,7 @@ class gqa_fwd_wgmma_pipelined_kernel(Kernel):
         dim,
         is_causal,
         dtype,
-        config: Optional[dict] = None,
+        config: dict | None = None,
         tune=False,
     ):
         super().__init__()

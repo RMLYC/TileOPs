@@ -389,7 +389,7 @@ def _sparse_mla_wrapped_kernel(
     kv_stride: int,
     q_start_index_s: int,
     kv_group: int,
-    sm_scale: Optional[float],
+    sm_scale: float | None,
     is_causal: bool,
     CP0: bool,
     dtype: str,
@@ -462,7 +462,7 @@ class sparse_mla_kernel(Kernel):
         sm_scale=None,
         is_causal=True,
         CP0=True,
-        config: Optional[dict] = None,
+        config: dict | None = None,
         tune=False,
     ):
         super().__init__()

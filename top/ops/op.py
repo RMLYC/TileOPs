@@ -38,17 +38,17 @@ class Op(ABC):
     """
 
     kernel: Kernel
-    kernel_map: Optional[Dict[str, Kernel]] = {}
-    dtype: Optional[torch.dtype] = None
-    device: Optional[Union[torch.device, str]] = "cuda"
-    input_shapes: Optional[list[tuple]] = None
+    kernel_map: dict[str, Kernel] | None = {}
+    dtype: torch.dtype | None = None
+    device: torch.device | str | None = "cuda"
+    input_shapes: list[tuple] | None = None
 
     @property
     @abstractmethod
-    def default_kernel_map(self) -> Dict[str, Kernel]:
+    def default_kernel_map(self) -> dict[str, Kernel]:
         raise NotImplementedError("Op must implement default_kernel_map")
 
-    def dispatch_kernel(self, kernel_map: Optional[Dict[str, Kernel]] = None):
+    def dispatch_kernel(self, kernel_map: dict[str, Kernel] | None = None):
         assert self.default_kernel_map is not None and len(self.default_kernel_map) > 0
         for name, default_kernel in self.default_kernel_map.items():
             if kernel_map is not None and name in kernel_map:

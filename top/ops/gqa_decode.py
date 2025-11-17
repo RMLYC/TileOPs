@@ -21,7 +21,7 @@ class gqa_decode(Op):
         seqlen_kv,
         dim,
         dtype=torch.float16,
-        kernel_map: Optional[Dict[str, Kernel]] = None,
+        kernel_map: dict[str, Kernel] | None = None,
         tune=False,
     ):
         self.batch = batch

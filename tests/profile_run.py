@@ -263,7 +263,7 @@ def main():
 
     # Read CSV file
     try:
-        with open(input_csv_path, "r") as f:
+        with open(input_csv_path) as f:
             reader = csv.DictReader(f)
             input_params = list(reader)
     except Exception as e:

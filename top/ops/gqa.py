@@ -30,7 +30,7 @@ class gqa_fwd(Op):
         dim,
         is_causal,
         dtype=torch.float16,
-        kernel_map: Optional[Dict[str, Kernel]] = None,
+        kernel_map: dict[str, Kernel] | None = None,
         tune=False,
     ):
         self.batch = batch
@@ -67,7 +67,7 @@ class gqa_bwd(Op):
         dim,
         is_causal,
         dtype=torch.float16,
-        kernel_map: Optional[Dict[str, Kernel]] = None,
+        kernel_map: dict[str, Kernel] | None = None,
         tune=False,
     ):
         self.batch = batch

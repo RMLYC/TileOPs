@@ -410,7 +410,7 @@ class mha_decode_kernel(Kernel):
         dim,
         is_causal,
         dtype="float16",
-        config: Optional[dict] = None,
+        config: dict | None = None,
         tune=False,
     ):
         super().__init__()

@@ -56,7 +56,7 @@ def _gemm_kernel(M, N, K, dtype="float16"):
 class gemm_kernel(Kernel):
     supported_archs: list[int] = [80, 89, 90]
 
-    def __init__(self, M, N, K, dtype, config: Optional[dict] = None, tune=False):
+    def __init__(self, M, N, K, dtype, config: dict | None = None, tune=False):
         super().__init__()
         self.M = M
         self.N = N

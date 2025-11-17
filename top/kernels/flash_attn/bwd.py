@@ -237,7 +237,7 @@ class mha_bwd_kernel(Kernel):
         dim,
         is_causal,
         dtype,
-        config: Optional[dict] = None,
+        config: dict | None = None,
         tune=False,
     ):
         super().__init__()
@@ -420,7 +420,7 @@ class mha_bwd_wgmma_pipelined_kernel(Kernel):
         dim,
         is_causal,
         dtype,
-        config: Optional[dict] = None,
+        config: dict | None = None,
         tune=False,
     ):
         super().__init__()
@@ -585,7 +585,7 @@ class gqa_bwd_kernel(Kernel):
         dim,
         is_causal,
         dtype,
-        config: Optional[dict] = None,
+        config: dict | None = None,
         tune=False,
     ):
         super().__init__()
@@ -774,7 +774,7 @@ class gqa_bwd_wgmma_pipelined_kernel(Kernel):
         dim,
         is_causal,
         dtype,
-        config: Optional[dict] = None,
+        config: dict | None = None,
         tune=False,
     ):
         super().__init__()

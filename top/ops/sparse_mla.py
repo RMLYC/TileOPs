@@ -27,7 +27,7 @@ class sparse_mla(Op):
         sm_scale=None,
         is_causal=True,
         dtype=torch.float16,
-        kernel_map: Optional[Dict[str, Kernel]] = None,
+        kernel_map: dict[str, Kernel] | None = None,
         tune=False,
     ):
         self.batch = batch

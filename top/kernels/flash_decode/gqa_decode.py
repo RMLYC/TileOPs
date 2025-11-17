@@ -332,7 +332,7 @@ class gqa_decode_kernel(Kernel):
         seqlen_kv,
         dim,
         dtype="float16",
-        config: Optional[dict] = None,
+        config: dict | None = None,
         tune=False,
     ):
         super().__init__()

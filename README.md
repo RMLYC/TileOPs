@@ -4,7 +4,7 @@
 
 Note: TileOPs is still under rapid development.
 
----
+______________________________________________________________________
 
 ![DeepSeek-V3.2-Exp DeepSeek Sparse Attention (DSA) performance on H800 SXM](https://raw.githubusercontent.com/tile-ai/TileOPs/main/docs/figures/sparse_mla_perf.png)
 *DeepSeek-V3.2-Exp DeepSeek Sparse Attention (DSA) performance on H800 SXM*
@@ -66,15 +66,19 @@ sparse_mla = SparseMLAKernel(
     sm_scale=sm_scale,
     is_casual=True,
     dtype=torch.bfloat16,
-    device='cuda',
+    device="cuda",
 )
 
 # Evaluate the Sparse MLA kernel performance
 sparse_mla.check()
 latency = sparse_mla.profile()
 print(f"Latency: {latency:.4f} ms")
-print(f'fwd tflops = ',
-        (batch_size * seq_len * (head_dim + tail_dim + head_dim) * topk * 2 * n_heads) / (latency * 1e-3) / 1e12)
+print(
+    f"fwd tflops = ",
+    (batch_size * seq_len * (head_dim + tail_dim + head_dim) * topk * 2 * n_heads)
+    / (latency * 1e-3)
+    / 1e12,
+)
 ```
 
 ### MLA
@@ -111,13 +115,17 @@ block_N = 64
 block_H = 64
 num_split = 1
 
-mla = MLAKernel(batch, heads, kv_heads, kv_ctx, dim, pe_dim, block_N, block_H, num_split)
+mla = MLAKernel(
+    batch, heads, kv_heads, kv_ctx, dim, pe_dim, block_N, block_H, num_split
+)
 
 out = mla(q, q_pe, kv, k_pe)
 ```
+
 ## Design
 
 ### Hierarchical Concepts
+
 There are 4 hierarchical key concepts in TileOPs, each layer stands for a different level of abstraction and is built from or delegates to the next lower level.
 
 - **Layer**: **Function**s that are equipped with runtime elements (e.g. Weights, Buffers, etc.)

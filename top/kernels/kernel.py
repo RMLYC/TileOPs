@@ -1,15 +1,16 @@
 from abc import ABC, abstractmethod
-from typing import Callable, Optional
+from collections.abc import Callable
+from typing import Optional
 
 import torch
 from tilelang.autotuner import autotune
 
 
 class Kernel(ABC):
-    dtype: Optional[torch.dtype] = None
+    dtype: torch.dtype | None = None
     config: dict
-    autotune_configs: Optional[list[dict]] = None
-    supported_archs: Optional[list[int]] = None
+    autotune_configs: list[dict] | None = None
+    supported_archs: list[int] | None = None
     kernel: Callable[[dict], Callable]
 
     def __init__(self, *args, **kwargs):

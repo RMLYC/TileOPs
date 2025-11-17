@@ -327,7 +327,7 @@ class mla_decode_kernel(Kernel):
         dim,
         pe_dim,
         dtype,
-        config: Optional[dict] = None,
+        config: dict | None = None,
         tune=False,
     ):
         super().__init__()
@@ -1100,7 +1100,7 @@ class mla_decode_ws_kernel(Kernel):
         dim,
         pe_dim,
         dtype,
-        config: Optional[dict] = None,
+        config: dict | None = None,
         tune=False,
     ):
         super().__init__()

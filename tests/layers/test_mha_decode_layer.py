@@ -1,7 +1,8 @@
 import argparse
+
+from benchmarks import mha_decode_benchmark
 from top import MHADecode
 from top.utils import str2dtype
-from benchmarks import mha_decode_benchmark
 
 
 def test_mha_decode_layer(B, S_q, S_kv, H, D, causal, dtype):

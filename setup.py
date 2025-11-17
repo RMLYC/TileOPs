@@ -1,7 +1,7 @@
 import os
 import sys
-from setuptools import setup
 
+from setuptools import setup
 
 # Control whether to use custom installation logic
 # Custom installation is enabled only when:
@@ -15,8 +15,9 @@ USE_CUSTOM_INSTALL = os.environ.get("TILEOPS_DEV_INSTALL") == "1" and not any(
 cmdclass = {}
 
 if USE_CUSTOM_INSTALL:
-    from setuptools.command.install import install
     import subprocess
+
+    from setuptools.command.install import install
 
     class CustomInstall(install):
 

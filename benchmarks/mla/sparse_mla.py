@@ -1,6 +1,7 @@
+import torch
+
 from benchmarks.benchmark import Benchmark
 from top.ops import sparse_mla
-import torch
 
 
 class sparse_mla_decode_benchmark(Benchmark):

@@ -1,7 +1,8 @@
 import torch
-from .function import Function
+
 from top.ops.sparse_mla import sparse_mla
 
+from .function import Function
 
 __all__ = ["sparse_mla_fn"]
 

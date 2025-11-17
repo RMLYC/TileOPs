@@ -1,7 +1,10 @@
+from typing import Dict, Optional
+
 import torch
+
+from top.kernels import Kernel, sparse_mla_kernel
+
 from .op import Op
-from top.kernels import sparse_mla_kernel, Kernel
-from typing import Optional, Dict
 
 __all__ = ["sparse_mla"]
 

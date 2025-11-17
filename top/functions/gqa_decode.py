@@ -1,7 +1,8 @@
 import torch
-from .function import Function
+
 from top.ops.gqa_decode import gqa_decode
 
+from .function import Function
 
 __all__ = ["gqa_decode_fn"]
 

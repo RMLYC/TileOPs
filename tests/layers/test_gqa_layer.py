@@ -1,7 +1,8 @@
 import argparse
-from top.utils import str2dtype
-from top.layers.flash_attn import GQA
+
 from benchmarks import gqa_benchmark
+from top.layers.flash_attn import GQA
+from top.utils import str2dtype
 
 
 def test_gqa_layer(B, S, H, H_kv, D, causal, dtype):

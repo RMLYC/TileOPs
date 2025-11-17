@@ -1,7 +1,8 @@
 import argparse
+
+from benchmarks import gqa_benchmark
 from top import gqa_fn
 from top.utils import str2dtype
-from benchmarks import gqa_benchmark
 
 
 def test_gqa_fn(B, S, H, H_kv, D, causal, dtype):

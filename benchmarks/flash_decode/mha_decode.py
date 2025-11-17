@@ -1,8 +1,9 @@
-from benchmarks.benchmark import Benchmark
-from top.ops import mha_decode
 import torch
 from torch.nn import functional as F
-from torch.nn.attention import sdpa_kernel, SDPBackend
+from torch.nn.attention import SDPBackend, sdpa_kernel
+
+from benchmarks.benchmark import Benchmark
+from top.ops import mha_decode
 
 
 class mha_decode_benchmark(Benchmark):

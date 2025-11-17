@@ -1,8 +1,9 @@
 import argparse
+
+from benchmarks import sparse_mla_decode_benchmark
 from top.functions import sparse_mla_fn
 from top.layers import SparseMLADecode
 from top.utils import str2dtype
-from benchmarks import sparse_mla_decode_benchmark
 
 
 def test_sparse_mla_decode(

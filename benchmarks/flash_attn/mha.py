@@ -1,8 +1,9 @@
-from benchmarks.benchmark import Benchmark
-from top.ops import mha_fwd, mha_bwd
 import torch
 from torch.nn import functional as F
-from torch.nn.attention import sdpa_kernel, SDPBackend
+from torch.nn.attention import SDPBackend, sdpa_kernel
+
+from benchmarks.benchmark import Benchmark
+from top.ops import mha_bwd, mha_fwd
 
 
 class mha_fwd_benchmark(Benchmark):

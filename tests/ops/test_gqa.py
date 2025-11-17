@@ -1,7 +1,8 @@
 import argparse
-from top.ops import gqa_fwd, gqa_bwd
+
+from benchmarks import gqa_bwd_benchmark, gqa_fwd_benchmark
+from top.ops import gqa_bwd, gqa_fwd
 from top.utils import str2dtype
-from benchmarks import gqa_fwd_benchmark, gqa_bwd_benchmark
 
 
 def test_gqa_fwd(B, S, H, H_KV, D, causal, dtype, tune=False):

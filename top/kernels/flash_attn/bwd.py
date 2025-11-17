@@ -1,9 +1,11 @@
+import itertools
+from typing import Optional
+
 import tilelang
 import tilelang.language as T
-from typing import Optional
-from top.kernels.kernel import Kernel
-import itertools
 import torch
+
+from ..kernel import Kernel
 
 __all__ = [
     "flashattn_bwd_preprocess_kernel",

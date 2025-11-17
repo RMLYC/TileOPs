@@ -1,7 +1,8 @@
 import argparse
-from top.utils import str2dtype
-from top.layers.flash_attn import MHA
+
 from benchmarks import mha_benchmark
+from top.layers.flash_attn import MHA
+from top.utils import str2dtype
 
 
 def test_mha_layer(B, S, H, D, causal, dtype):

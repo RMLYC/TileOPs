@@ -2,10 +2,12 @@
 # Check: https://docs.pytorch.org/tutorials/advanced/python_custom_ops.html
 
 import argparse
+
+import torch
+
+from benchmarks import mha_fwd_benchmark
 from top import mha_fwd, mha_fwd_kernel
 from top.utils import str2dtype
-from benchmarks import mha_fwd_benchmark
-import torch
 
 
 def test_mha_kernel_compile(B, S, H, D, causal, dtype):

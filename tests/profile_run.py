@@ -3,9 +3,9 @@
 
 import argparse
 import csv
+import re
 import subprocess
 import sys
-import re
 from pathlib import Path
 
 

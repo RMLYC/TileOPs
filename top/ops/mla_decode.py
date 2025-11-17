@@ -1,8 +1,11 @@
+from typing import Dict, Optional
+
 import torch
-from .op import Op
-from top.kernels import mla_decode_kernel, mla_decode_ws_kernel, Kernel
+
+from top.kernels import Kernel, mla_decode_kernel, mla_decode_ws_kernel
 from top.utils import is_hopper
-from typing import Optional, Dict
+
+from .op import Op
 
 __all__ = ["mla_decode"]
 

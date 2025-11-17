@@ -1,7 +1,8 @@
 import torch
-from .function import Function
+
 from top.ops.mha_decode import mha_decode
 
+from .function import Function
 
 __all__ = ["mha_decode_fn"]
 

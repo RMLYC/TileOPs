@@ -1,6 +1,7 @@
 import torch
 from torch import nn
-from top import mha_fn, gqa_fn
+
+from top import gqa_fn, mha_fn
 
 
 class MHA(nn.Module):

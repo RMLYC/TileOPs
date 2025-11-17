@@ -1,6 +1,7 @@
+import torch
+
 from benchmarks.benchmark import Benchmark
 from top.ops import Gemm
-import torch
 
 
 class gemm_benchmark(Benchmark):

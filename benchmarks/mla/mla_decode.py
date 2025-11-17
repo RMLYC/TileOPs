@@ -1,8 +1,9 @@
+import torch
+from einops import einsum, rearrange
+from torch.nn import functional as F
+
 from benchmarks.benchmark import Benchmark
 from top.ops import mla_decode
-import torch
-from torch.nn import functional as F
-from einops import rearrange, einsum
 
 
 class mla_decode_benchmark(Benchmark):

@@ -1,8 +1,9 @@
 import argparse
+
+from benchmarks import mla_decode_benchmark
 from top.functions import mla_decode_fn
 from top.layers import MLADecode
 from top.utils import str2dtype
-from benchmarks import mla_decode_benchmark
 
 
 def test_mla_decode_fn(B, kv_head_num, S_kv, H, D, Pe_D, dtype):

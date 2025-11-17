@@ -1,9 +1,11 @@
+import itertools
+from typing import Optional, Tuple
+
 import tilelang
 import tilelang.language as T
-from typing import Optional, Tuple
-from top.kernels.kernel import Kernel
-import itertools
 import torch
+
+from ..kernel import Kernel
 
 __all__ = [
     "mha_fwd_kernel",

@@ -1,7 +1,8 @@
 import argparse
+
+from benchmarks import mha_benchmark
 from top import mha_fn
 from top.utils import str2dtype
-from benchmarks import mha_benchmark
 
 
 def test_mha_fn(B, S, H, D, causal, dtype):

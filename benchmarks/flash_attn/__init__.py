@@ -1,2 +1,2 @@
-from .mha import *
 from .gqa import *
+from .mha import *

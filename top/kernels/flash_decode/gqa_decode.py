@@ -1,9 +1,11 @@
-import torch
+import itertools
+from typing import Optional
+
 import tilelang
 import tilelang.language as T
-from top.kernels.kernel import Kernel
-from typing import Optional
-import itertools
+import torch
+
+from ..kernel import Kernel
 
 __all__ = ["gqa_decode_kernel"]
 

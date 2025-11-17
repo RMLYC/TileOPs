@@ -1,8 +1,11 @@
+from typing import Dict, Optional
+
 import torch
-from .op import Op
-from top.kernels import gqa_decode_kernel, Kernel
+
+from top.kernels import Kernel, gqa_decode_kernel
 from top.utils import is_hopper
-from typing import Optional, Dict
+
+from .op import Op
 
 __all__ = ["gqa_decode"]
 

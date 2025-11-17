@@ -1,7 +1,8 @@
 import argparse
-from top.ops import mha_fwd, mha_bwd
+
+from benchmarks import mha_bwd_benchmark, mha_fwd_benchmark
+from top.ops import mha_bwd, mha_fwd
 from top.utils import str2dtype
-from benchmarks import mha_fwd_benchmark, mha_bwd_benchmark
 
 
 def test_mha_fwd(B, S, H, D, causal, dtype, tune=False):

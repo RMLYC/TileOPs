@@ -1,7 +1,8 @@
 import torch
-from .function import Function
-from top.ops.mha import mha_fwd, mha_bwd
 
+from top.ops.mha import mha_bwd, mha_fwd
+
+from .function import Function
 
 __all__ = ["mha_fn"]
 

@@ -1,7 +1,8 @@
 import argparse
+
+from benchmarks import gqa_decode_benchmark
 from top import gqa_decode_fn
 from top.utils import str2dtype
-from benchmarks import gqa_decode_benchmark
 
 
 def test_gqa_decode_fn(B, H, S_kv, D, groups, dtype):

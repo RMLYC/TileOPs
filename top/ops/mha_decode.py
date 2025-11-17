@@ -1,7 +1,10 @@
+from typing import Dict, Optional
+
 import torch
+
+from top.kernels import Kernel, mha_decode_kernel
+
 from .op import Op
-from top.kernels import mha_decode_kernel, Kernel
-from typing import Optional, Dict
 
 __all__ = ["mha_decode"]
 

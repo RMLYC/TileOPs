@@ -1,10 +1,13 @@
+import itertools
+from typing import Optional
+
 import tilelang
 import tilelang.language as T
-from typing import Optional
-import itertools
 import torch
+
 from top.utils import get_sm_version
-from top.kernels import Kernel
+
+from ..kernel import Kernel
 
 
 def _gemm_kernel(M, N, K, dtype="float16"):

@@ -1,7 +1,8 @@
 import argparse
+
+from benchmarks import mla_decode_benchmark
 from top.ops import mla_decode
 from top.utils import str2dtype
-from benchmarks import mla_decode_benchmark
 
 
 def test_mla_decode(B, H, kv_head_num, S_kv, D, Pe_D, dtype, tune=False):

@@ -1,7 +1,8 @@
 import torch
-from .function import Function
-from top.ops.gqa import gqa_fwd, gqa_bwd
 
+from top.ops.gqa import gqa_bwd, gqa_fwd
+
+from .function import Function
 
 __all__ = ["gqa_fn"]
 

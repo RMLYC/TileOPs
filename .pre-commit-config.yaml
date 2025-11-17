@@ -21,7 +21,6 @@ repos:
         args: ['--fix=lf'] # fix line endings to unix style
         files: (?!.*3rd-party)^.*$ # ignore 3rd-party files
     -   id: check-case-conflict
-    -   id: check-json
     -   id: trailing-whitespace
 
 -   repo: https://github.com/PyCQA/isort
@@ -31,20 +30,6 @@ repos:
         files: \.py$
         exclude: ^3rd-party/
         args: ["--settings-path", "pyproject.toml"]
-
--   repo: local
-    hooks:
-    -   id: clang-format-with-version-check
-        name: clang-format
-        description: Format files with ClangFormat.
-        entry: bash ./scripts/clang_format.hook -i
-        language: system
-        files: \.(c|cc|cxx|cpp|cu|h|cuh|hpp|hxx|proto)$
-
--   repo: https://github.com/iconmaster5326/cmake-format-pre-commit-hook
-    rev: v0.6.13
-    hooks:
-    -   id: cmake-format
 
 -   repo: https://github.com/psf/black
     rev: 25.1.0
@@ -57,7 +42,7 @@ repos:
     rev: 7.1.2
     hooks:
     -   id: flake8
-        args: 
+        args:
             - "--max-line-length=120"
             - "--extend-ignore=E203,W503,VNE001,VNE002,U100,D,R504,E741,E501"
         additional_dependencies:

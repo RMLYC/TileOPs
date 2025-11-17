@@ -18,7 +18,6 @@ class MHADecode(nn.Module):
 
         self.fn = mha_decode_fn(batch_size, heads, seqlen_q, seqlen_kv, dim, is_causal, dtype)
 
-
     def forward(self, Q: torch.Tensor, K: torch.Tensor, V: torch.Tensor) -> torch.Tensor:
         return self.fn(Q, K, V)
 
@@ -37,5 +36,7 @@ class GQADecode(nn.Module):
 
         self.fn = gqa_decode_fn(batch_size, heads, groups, seqlen_kv, dim, dtype)
 
-    def forward(self, Q: torch.Tensor, K: torch.Tensor, V: torch.Tensor, mask: torch.Tensor) -> torch.Tensor:
+    def forward(
+        self, Q: torch.Tensor, K: torch.Tensor, V: torch.Tensor, mask: torch.Tensor
+    ) -> torch.Tensor:
         return self.fn(Q, K, V, mask)

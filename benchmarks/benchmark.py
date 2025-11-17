@@ -18,7 +18,7 @@ class Benchmark(ABC):
 
     def gen_inputs(self):
         raise NotImplementedError
-        #TODo: impl this?
+        # TODo: impl this?
 
     @abstractmethod
     def ref_program(self, *inputs):
@@ -55,8 +55,9 @@ class Benchmark(ABC):
         for i, (output, output_ref) in enumerate(zip(outputs, outputs_ref)):
             # print(f"outputs[{i}] max err: {(output - output_ref).abs().max()}")
             if output_ref is not None:  # skip checking for None placeholders in ref
-                assert torch.allclose(output, output_ref, atol=atol, rtol=rtol), \
-                    f"outputs[{i}] is not close to outputs_ref[{i}], max err: {(output - output_ref).abs().max()}"
+                assert torch.allclose(
+                    output, output_ref, atol=atol, rtol=rtol
+                ), f"outputs[{i}] is not close to outputs_ref[{i}], max err: {(output - output_ref).abs().max()}"
 
         print(f"All checks passed for {op.__class__.__name__}.✅")
 
@@ -96,12 +97,15 @@ class Benchmark(ABC):
         elif not isinstance(outputs, tuple):
             raise ValueError(f"Unsupported output type: {type(outputs)}")
 
-        assert len(outputs) == len(outputs_ref), f"outputs: {len(outputs)}  and outputs_ref: {len(outputs_ref)} have different size"
+        assert len(outputs) == len(
+            outputs_ref
+        ), f"outputs: {len(outputs)}  and outputs_ref: {len(outputs_ref)} have different size"
         for i, (output, output_ref) in enumerate(zip(outputs, outputs_ref)):
             # print(f"outputs[{i}] max err: {(output - output_ref).abs().max()}")
             if output_ref is not None:  # skip checking for None placeholders in ref
-                assert torch.allclose(output, output_ref, atol=atol, rtol=rtol), \
-                    f"outputs[{i}] is not close to outputs_ref[{i}], max err: {(output - output_ref).abs().max()}"
+                assert torch.allclose(
+                    output, output_ref, atol=atol, rtol=rtol
+                ), f"outputs[{i}] is not close to outputs_ref[{i}], max err: {(output - output_ref).abs().max()}"
 
         print(f"All checks passed for {fn.__class__.__name__}.✅")
 
@@ -111,11 +115,12 @@ class Benchmark(ABC):
         print(f"===== Profiling {op.__class__.__name__} =====")
         with torch.no_grad():
             # Always use cupti backend for better accuracy
-            latency = do_bench(lambda: op(*inputs), warmup=warmup, rep=rep, backend='cupti')
+            latency = do_bench(lambda: op(*inputs), warmup=warmup, rep=rep, backend="cupti")
 
         print(f"{op.__class__.__name__} latency: {latency:.2f} ms")
         if self.total_flops is not None:
             print(f"{op.__class__.__name__} TFlops: {self.total_flops / latency * 1e-9:.2f} TFlops")
         if self.total_memory is not None:
             print(
-                f"{op.__class__.__name__} Bandwidth: {self.total_memory / latency * 1e-9:.2f} GB/s")
+                f"{op.__class__.__name__} Bandwidth: {self.total_memory / latency * 1e-9:.2f} GB/s"
+            )

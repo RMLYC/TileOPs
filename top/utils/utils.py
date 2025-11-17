@@ -1,7 +1,7 @@
 import torch
 
 # A mapping from string dtype names to torch dtypes
-str2dtype = {'float16': torch.float16, 'bfloat16': torch.bfloat16, 'float32': torch.float32}
+str2dtype = {"float16": torch.float16, "bfloat16": torch.bfloat16, "float32": torch.float32}
 
 # A mapping from torch dtypes to string names
 dtype2str = {v: k for k, v in str2dtype.items()}
@@ -28,7 +28,7 @@ def zero_pad(x: torch.Tensor, pad_size: int, dim: int) -> torch.Tensor:
         torch.Tensor: Padded tensor."""
     if x.size(dim) % pad_size == 0:
         return x
-    pad_len = (pad_size - x.size(dim) % pad_size)
+    pad_len = pad_size - x.size(dim) % pad_size
     assert 0 < pad_len < pad_size
 
     zero_shape = list(x.shape)

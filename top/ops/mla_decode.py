@@ -10,16 +10,18 @@ __all__ = ["mla_decode"]
 class mla_decode(Op):
     """Layout: BSHD"""
 
-    def __init__(self,
-                 batch,
-                 heads,
-                 kv_head_num,
-                 seqlen_kv,
-                 dim,
-                 pe_dim,
-                 dtype=torch.float16,
-                 kernel_map: Optional[Dict[str, Kernel]] = None,
-                 tune=False):
+    def __init__(
+        self,
+        batch,
+        heads,
+        kv_head_num,
+        seqlen_kv,
+        dim,
+        pe_dim,
+        dtype=torch.float16,
+        kernel_map: Optional[Dict[str, Kernel]] = None,
+        tune=False,
+    ):
         self.batch = batch
         self.heads = heads
         self.kv_head_num = kv_head_num
@@ -31,11 +33,14 @@ class mla_decode(Op):
 
         self.dispatch_kernel(kernel_map)
         self.kernel = self.kernel_map["mla_decode_kernel"](
-            batch, heads, kv_head_num, seqlen_kv, dim, pe_dim, self.dtype, tune=tune)
+            batch, heads, kv_head_num, seqlen_kv, dim, pe_dim, self.dtype, tune=tune
+        )
 
     @property
     def default_kernel_map(self):
         return {"mla_decode_kernel": mla_decode_ws_kernel if is_hopper() else mla_decode_kernel}
 
-    def forward(self, Q: torch.Tensor, Q_pe: torch.Tensor, K: torch.Tensor, K_pe: torch.Tensor) -> torch.Tensor:
+    def forward(
+        self, Q: torch.Tensor, Q_pe: torch.Tensor, K: torch.Tensor, K_pe: torch.Tensor
+    ) -> torch.Tensor:
         return self.kernel(Q, Q_pe, K, K_pe)

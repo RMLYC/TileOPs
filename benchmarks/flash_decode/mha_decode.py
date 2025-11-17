@@ -20,7 +20,9 @@ class mha_decode_benchmark(Benchmark):
 
     @property
     def total_flops(self):
-        flops_per_matmul = 2.0 * self.batch * self.heads * self.seq_len_q * self.seq_len_kv * self.dim
+        flops_per_matmul = (
+            2.0 * self.batch * self.heads * self.seq_len_q * self.seq_len_kv * self.dim
+        )
         flops = flops_per_matmul * 2
         return flops / 2 if self.is_causal else flops
 
@@ -29,23 +31,33 @@ class mha_decode_benchmark(Benchmark):
         # Q: batch * seq_len_q * heads * dim
         # K, V: batch * seq_len_kv * heads * dim
         # Output: batch * seq_len_q * heads * dim
-        return (self.batch * self.heads * (2 * self.seq_len_q + 2 * self.seq_len_kv) * self.dim *
-                self.dtype.itemsize)
+        return (
+            self.batch
+            * self.heads
+            * (2 * self.seq_len_q + 2 * self.seq_len_kv)
+            * self.dim
+            * self.dtype.itemsize
+        )
 
     def gen_inputs(self):
         Q = torch.randn(
-            self.batch, self.seq_len_q, self.heads, self.dim, device='cuda', dtype=self.dtype)
+            self.batch, self.seq_len_q, self.heads, self.dim, device="cuda", dtype=self.dtype
+        )
         K = torch.randn(
-            self.batch, self.seq_len_kv, self.heads, self.dim, device='cuda', dtype=self.dtype)
+            self.batch, self.seq_len_kv, self.heads, self.dim, device="cuda", dtype=self.dtype
+        )
         V = torch.randn(
-            self.batch, self.seq_len_kv, self.heads, self.dim, device='cuda', dtype=self.dtype)
+            self.batch, self.seq_len_kv, self.heads, self.dim, device="cuda", dtype=self.dtype
+        )
         return Q, K, V
 
     def ref_program(self, Q: torch.Tensor, K: torch.Tensor, V: torch.Tensor):
-        q_bhsd = Q.transpose(1, 2)   # [B, H, S_q, D]
-        k_bhsd = K.transpose(1, 2)   # [B, H, S_kv, D]
-        v_bhsd = V.transpose(1, 2)   # [B, H, S_kv, D]
+        q_bhsd = Q.transpose(1, 2)  # [B, H, S_q, D]
+        k_bhsd = K.transpose(1, 2)  # [B, H, S_kv, D]
+        v_bhsd = V.transpose(1, 2)  # [B, H, S_kv, D]
         with sdpa_kernel(backends=[SDPBackend.FLASH_ATTENTION]):
-            output_bhsd = F.scaled_dot_product_attention(q_bhsd, k_bhsd, v_bhsd, is_causal=self.is_causal)
+            output_bhsd = F.scaled_dot_product_attention(
+                q_bhsd, k_bhsd, v_bhsd, is_causal=self.is_causal
+            )
         output = output_bhsd.transpose(1, 2).contiguous()
         return output

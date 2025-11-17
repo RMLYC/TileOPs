@@ -3,18 +3,20 @@ from .op import Op
 from top.kernels import gemm_kernel, Kernel
 from typing import Optional, Dict
 
-__all__ = ['Gemm']
+__all__ = ["Gemm"]
 
 
 class Gemm(Op):
 
-    def __init__(self,
-                 M: int,
-                 N: int,
-                 K: int,
-                 dtype=torch.float16,
-                 kernel_map: Optional[Dict[str, Kernel]] = None,
-                 tune=False):
+    def __init__(
+        self,
+        M: int,
+        N: int,
+        K: int,
+        dtype=torch.float16,
+        kernel_map: Optional[Dict[str, Kernel]] = None,
+        tune=False,
+    ):
         self.M = M
         self.N = N
         self.K = K

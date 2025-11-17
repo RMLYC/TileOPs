@@ -18,6 +18,7 @@ class Kernel(ABC):
         if tune:
             if config is not None:
                 import warnings
+
                 warnings.warn(  # noqa: B028
                     "Both 'config' and 'tune' are set. 'config' will be ignored in favor of autotuning."
                 )
@@ -34,7 +35,7 @@ class Kernel(ABC):
     @property
     def dtype_str(self) -> str:
         """Convert dtype to str for tl kernels"""
-        return str(self.dtype).split('.')[-1]
+        return str(self.dtype).split(".")[-1]
 
     @property
     def default_config(self) -> dict:
@@ -52,16 +53,16 @@ class Kernel(ABC):
     def autotune(self, warmup=10, rep=10):
         if self.autotune_configs is None:
             return  # kernel doesn't support autotuning
-        print(f'Start autotuning {self.__class__.__name__}...')
+        print(f"Start autotuning {self.__class__.__name__}...")
 
         # Apply autotune decorator to the kernel function
-        autotuned_kernel_fn = autotune(
-            configs=self.autotune_configs, warmup=warmup, rep=rep)(
-                self.kernel)
+        autotuned_kernel_fn = autotune(configs=self.autotune_configs, warmup=warmup, rep=rep)(
+            self.kernel
+        )
 
         # Call without config parameters to trigger autotuning, returns the tuned kernel
         tuned_kernel = autotuned_kernel_fn()
 
         # Extract and store the best config
         self.config = tuned_kernel.config
-        print(f'Best config: {self.config}')
+        print(f"Best config: {self.config}")

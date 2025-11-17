@@ -9,22 +9,24 @@ __all__ = ["sparse_mla"]
 class sparse_mla(Op):
     """Layout: BSHD"""
 
-    def __init__(self,
-                 batch,
-                 heads,
-                 seq_len,
-                 seq_len_kv,
-                 dim,
-                 tail_dim,
-                 topk,
-                 kv_stride,
-                 kv_group,
-                 q_start_index_s,
-                 sm_scale=None,
-                 is_causal=True,
-                 dtype=torch.float16,
-                 kernel_map: Optional[Dict[str, Kernel]] = None,
-                 tune=False):
+    def __init__(
+        self,
+        batch,
+        heads,
+        seq_len,
+        seq_len_kv,
+        dim,
+        tail_dim,
+        topk,
+        kv_stride,
+        kv_group,
+        q_start_index_s,
+        sm_scale=None,
+        is_causal=True,
+        dtype=torch.float16,
+        kernel_map: Optional[Dict[str, Kernel]] = None,
+        tune=False,
+    ):
         self.batch = batch
         self.heads = heads
         self.seq_len = seq_len
@@ -47,9 +49,23 @@ class sparse_mla(Op):
         self.q_start_index_s = q_start_index_s
 
         self.dispatch_kernel(kernel_map)
-        self.kernel = self.kernel_map["sparse_mla_kernel"](self.batch, self.seq_len, self.seq_len_kv, self.heads,
-                                       self.dim, self.tail_dim, self.dtype, self.topk, self.kv_stride, self.q_start_index_s,
-                                       self.kv_group, self.sm_scale, self.is_causal, CP0, tune=tune)
+        self.kernel = self.kernel_map["sparse_mla_kernel"](
+            self.batch,
+            self.seq_len,
+            self.seq_len_kv,
+            self.heads,
+            self.dim,
+            self.tail_dim,
+            self.dtype,
+            self.topk,
+            self.kv_stride,
+            self.q_start_index_s,
+            self.kv_group,
+            self.sm_scale,
+            self.is_causal,
+            CP0,
+            tune=tune,
+        )
 
     @property
     def default_kernel_map(self):

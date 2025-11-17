@@ -3,7 +3,7 @@ from .function import Function
 from top.ops.mha import mha_fwd, mha_bwd
 
 
-__all__ = ['mha_fn']
+__all__ = ["mha_fn"]
 
 
 class mhc_ctx(torch.autograd.Function):
@@ -28,14 +28,7 @@ class mhc_ctx(torch.autograd.Function):
 
 class mha_fn(Function):
 
-    def __init__(self,
-                 batch,
-                 heads,
-                 seq_len,
-                 dim,
-                 is_causal,
-                 dtype=torch.float16,
-                 tune=False):
+    def __init__(self, batch, heads, seq_len, dim, is_causal, dtype=torch.float16, tune=False):
         self.batch = batch
         self.heads = heads
         self.seq_len = seq_len
@@ -46,7 +39,6 @@ class mha_fn(Function):
 
         self.fwd_op = mha_fwd(batch, heads, seq_len, dim, is_causal, dtype, tune=tune)
         self.bwd_op = mha_bwd(batch, heads, seq_len, dim, is_causal, dtype, tune=tune)
-
 
     def forward(self, Q: torch.Tensor, K: torch.Tensor, V: torch.Tensor) -> torch.Tensor:
         return mhc_ctx.apply(Q, K, V, self.fwd_op, self.bwd_op)

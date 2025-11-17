@@ -22,8 +22,8 @@ class gemm_benchmark(Benchmark):
         return (self.M * self.K + self.K * self.N + self.M * self.N) * self.dtype.itemsize
 
     def gen_inputs(self):
-        A = torch.randn(self.M, self.K, device='cuda', dtype=self.dtype)
-        B = torch.randn(self.K, self.N, device='cuda', dtype=self.dtype)
+        A = torch.randn(self.M, self.K, device="cuda", dtype=self.dtype)
+        B = torch.randn(self.K, self.N, device="cuda", dtype=self.dtype)
         return A, B
 
     def ref_program(self, A: torch.Tensor, B: torch.Tensor):

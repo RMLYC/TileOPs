@@ -15,15 +15,23 @@ def test_gqa_decode(B, H, G, S_kv, D, dtype, tune=False):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--batch', type=int, default=1, help='batch size')
-    parser.add_argument('--groups', type=int, default=8, help='number of groups')
-    parser.add_argument('--seq_len_kv', type=int, default=8192, help='key/value sequence length')
-    parser.add_argument('--heads', type=int, default=32, help='num heads')
-    parser.add_argument('--dim', type=int, default=128, help='head dim')
+    parser.add_argument("--batch", type=int, default=1, help="batch size")
+    parser.add_argument("--groups", type=int, default=8, help="number of groups")
+    parser.add_argument("--seq_len_kv", type=int, default=8192, help="key/value sequence length")
+    parser.add_argument("--heads", type=int, default=32, help="num heads")
+    parser.add_argument("--dim", type=int, default=128, help="head dim")
     parser.add_argument(
-        '--dtype', type=str, default='float16', choices=['float16', 'bfloat16'], help='data type')
-    parser.add_argument('--tune', action='store_true', default=False, help='enable autotune')
+        "--dtype", type=str, default="float16", choices=["float16", "bfloat16"], help="data type"
+    )
+    parser.add_argument("--tune", action="store_true", default=False, help="enable autotune")
     args = parser.parse_args()
 
-    test_gqa_decode(args.batch, args.heads, args.groups, args.seq_len_kv, args.dim, str2dtype[args.dtype], args.tune)
-
+    test_gqa_decode(
+        args.batch,
+        args.heads,
+        args.groups,
+        args.seq_len_kv,
+        args.dim,
+        str2dtype[args.dtype],
+        args.tune,
+    )

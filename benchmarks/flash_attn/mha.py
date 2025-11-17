@@ -29,19 +29,24 @@ class mha_fwd_benchmark(Benchmark):
 
     def gen_inputs(self):
         Q = torch.randn(
-            self.batch, self.seq_len, self.heads, self.dim, device='cuda', dtype=self.dtype)
+            self.batch, self.seq_len, self.heads, self.dim, device="cuda", dtype=self.dtype
+        )
         K = torch.randn(
-            self.batch, self.seq_len, self.heads, self.dim, device='cuda', dtype=self.dtype)
+            self.batch, self.seq_len, self.heads, self.dim, device="cuda", dtype=self.dtype
+        )
         V = torch.randn(
-            self.batch, self.seq_len, self.heads, self.dim, device='cuda', dtype=self.dtype)
+            self.batch, self.seq_len, self.heads, self.dim, device="cuda", dtype=self.dtype
+        )
         return Q, K, V
 
     def ref_program(self, Q: torch.Tensor, K: torch.Tensor, V: torch.Tensor):
-        q_bhsd = Q.transpose(1, 2)   # [B, H, S, D]
+        q_bhsd = Q.transpose(1, 2)  # [B, H, S, D]
         k_bhsd = K.transpose(1, 2)
         v_bhsd = V.transpose(1, 2)
         with sdpa_kernel(backends=[SDPBackend.FLASH_ATTENTION]):
-            output_bhsd = F.scaled_dot_product_attention(q_bhsd, k_bhsd, v_bhsd, is_causal=self.is_causal)
+            output_bhsd = F.scaled_dot_product_attention(
+                q_bhsd, k_bhsd, v_bhsd, is_causal=self.is_causal
+            )
         output = output_bhsd.transpose(1, 2).contiguous()
         return output, None  # do not check lse
 
@@ -75,26 +80,30 @@ class mha_bwd_benchmark(Benchmark):
             self.heads,
             self.dim,
             dtype=self.dtype,
-            device='cuda',
-            requires_grad=True)
+            device="cuda",
+            requires_grad=True,
+        )
         K = torch.randn(
             self.batch,
             self.seq_len,
             self.heads,
             self.dim,
             dtype=self.dtype,
-            device='cuda',
-            requires_grad=True)
+            device="cuda",
+            requires_grad=True,
+        )
         V = torch.randn(
             self.batch,
             self.seq_len,
             self.heads,
             self.dim,
             dtype=self.dtype,
-            device='cuda',
-            requires_grad=True)
+            device="cuda",
+            requires_grad=True,
+        )
         dO = torch.randn(
-            self.batch, self.seq_len, self.heads, self.dim, dtype=self.dtype, device='cuda')
+            self.batch, self.seq_len, self.heads, self.dim, dtype=self.dtype, device="cuda"
+        )
 
         fwd_op = mha_fwd(self.batch, self.heads, self.seq_len, self.dim, self.is_causal, self.dtype)
         with torch.no_grad():
@@ -102,18 +111,25 @@ class mha_bwd_benchmark(Benchmark):
 
         return Q, K, V, O, dO, lse
 
-    def ref_program(self, Q: torch.Tensor, K: torch.Tensor, V: torch.Tensor, O: torch.Tensor,
-                    dO: torch.Tensor, lse: torch.Tensor):
+    def ref_program(
+        self,
+        Q: torch.Tensor,
+        K: torch.Tensor,
+        V: torch.Tensor,
+        O: torch.Tensor,
+        dO: torch.Tensor,
+        lse: torch.Tensor,
+    ):
         dim = Q.size(-1)
-        scores = torch.einsum('bqhd,bkhd->bhqk', Q, K)
+        scores = torch.einsum("bqhd,bkhd->bhqk", Q, K)
         scores = scores / torch.sqrt(torch.tensor(dim, dtype=scores.dtype))
         if self.is_causal:
             seq_len = Q.size(1)
             mask = torch.tril(torch.ones(seq_len, seq_len, device=scores.device))
             mask = mask.unsqueeze(0).unsqueeze(0)
-            scores = scores.masked_fill(mask == 0, float('-inf'))
+            scores = scores.masked_fill(mask == 0, float("-inf"))
         attention_weights = F.softmax(scores, dim=-1)
-        output = torch.einsum('bhqk,bkhd->bqhd', attention_weights, V)
+        output = torch.einsum("bhqk,bkhd->bqhd", attention_weights, V)
 
         output.backward(dO)
         return Q.grad, K.grad, V.grad
@@ -148,33 +164,40 @@ class mha_benchmark(Benchmark):
             self.heads,
             self.dim,
             dtype=self.dtype,
-            device='cuda',
-            requires_grad=self.grad)
+            device="cuda",
+            requires_grad=self.grad,
+        )
         K = torch.randn(
             self.batch,
             self.seq_len,
             self.heads,
             self.dim,
             dtype=self.dtype,
-            device='cuda',
-            requires_grad=self.grad)
+            device="cuda",
+            requires_grad=self.grad,
+        )
         V = torch.randn(
             self.batch,
             self.seq_len,
             self.heads,
             self.dim,
             dtype=self.dtype,
-            device='cuda',
-            requires_grad=self.grad)
+            device="cuda",
+            requires_grad=self.grad,
+        )
 
         return Q, K, V
 
-    def ref_program(self, Q: torch.Tensor, K: torch.Tensor, V: torch.Tensor, dO: torch.Tensor = None):
-        q_bhsd = Q.transpose(1, 2)   # [B, H, S, D]
+    def ref_program(
+        self, Q: torch.Tensor, K: torch.Tensor, V: torch.Tensor, dO: torch.Tensor = None
+    ):
+        q_bhsd = Q.transpose(1, 2)  # [B, H, S, D]
         k_bhsd = K.transpose(1, 2)
         v_bhsd = V.transpose(1, 2)
         with sdpa_kernel(backends=[SDPBackend.FLASH_ATTENTION]):
-            output_bhsd = F.scaled_dot_product_attention(q_bhsd, k_bhsd, v_bhsd, is_causal=self.is_causal)
+            output_bhsd = F.scaled_dot_product_attention(
+                q_bhsd, k_bhsd, v_bhsd, is_causal=self.is_causal
+            )
         output = output_bhsd.transpose(1, 2).contiguous()
 
         if not self.grad:
@@ -183,4 +206,3 @@ class mha_benchmark(Benchmark):
             loss = output.sum()
             loss.backward()
             return output, Q.grad, K.grad, V.grad
-

@@ -37,6 +37,27 @@ build-backend = "setuptools.build_meta"
 where = ["."]
 exclude = ["3rdparty", "3rdparty.*", "tests", "tests.*", "benchmarks", "benchmarks.*"]
 
+[tool.black]
+line-length = 100          # 每行最大长度，按你代码风格可以改成 88/100/120
+target-version = ["py38"] # 和你 pyupgrade --py311-plus 对齐
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.venv
+  | build
+  | dist
+  | 3rd-party
+)/
+'''
+
+[tool.isort]
+profile = "black"          # 关键：用 black 的风格
+line_length = 100          # 行宽跟 black 一致
+src_paths = ["."]
+skip = ["3rd-party"]       # 跟 pre-commit 里 exclude 一致
+known_first_party = []     # 你可以把自己项目的包名填进来
+
 [tool.yapf]
 based_on_style = "yapf"
 column_limit = 100

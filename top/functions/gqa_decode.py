@@ -3,7 +3,7 @@ from .function import Function
 from top.ops.gqa_decode import gqa_decode
 
 
-__all__ = ['gqa_decode_fn']
+__all__ = ["gqa_decode_fn"]
 
 
 class gqa_decode_ctx(torch.autograd.Function):
@@ -20,14 +20,7 @@ class gqa_decode_ctx(torch.autograd.Function):
 
 class gqa_decode_fn(Function):
 
-    def __init__(self,
-                 batch,
-                 heads,
-                 groups,
-                 seqlen_kv,
-                 dim,
-                 dtype=torch.float16,
-                 tune=False):
+    def __init__(self, batch, heads, groups, seqlen_kv, dim, dtype=torch.float16, tune=False):
         self.batch = batch
         self.heads = heads
         self.groups = groups
@@ -38,7 +31,7 @@ class gqa_decode_fn(Function):
 
         self.fwd_op = gqa_decode(batch, heads, groups, seqlen_kv, dim, dtype, tune=tune)
 
-
-    def forward(self, Q: torch.Tensor, K: torch.Tensor, V: torch.Tensor, mask: torch.Tensor) -> torch.Tensor:
+    def forward(
+        self, Q: torch.Tensor, K: torch.Tensor, V: torch.Tensor, mask: torch.Tensor
+    ) -> torch.Tensor:
         return gqa_decode_ctx.apply(Q, K, V, mask, self.fwd_op)
-

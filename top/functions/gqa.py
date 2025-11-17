@@ -3,7 +3,7 @@ from .function import Function
 from top.ops.gqa import gqa_fwd, gqa_bwd
 
 
-__all__ = ['gqa_fn']
+__all__ = ["gqa_fn"]
 
 
 class gqa_ctx(torch.autograd.Function):
@@ -28,15 +28,9 @@ class gqa_ctx(torch.autograd.Function):
 
 class gqa_fn(Function):
 
-    def __init__(self,
-                 batch,
-                 heads,
-                 heads_kv,
-                 seq_len,
-                 dim,
-                 is_causal,
-                 dtype=torch.float16,
-                 tune=False):
+    def __init__(
+        self, batch, heads, heads_kv, seq_len, dim, is_causal, dtype=torch.float16, tune=False
+    ):
         self.batch = batch
         self.heads = heads
         self.seq_len = seq_len

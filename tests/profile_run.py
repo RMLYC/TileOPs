@@ -14,112 +14,164 @@ def build_gemm_cmd(args_dict):
     Build command arguments for GEMM test script
     """
     cmd_args = [
-        '--M', str(args_dict['M']),
-        '--N', str(args_dict['N']),
-        '--K', str(args_dict['K']),
-        '--dtype', str(args_dict['dtype'])
+        "--M",
+        str(args_dict["M"]),
+        "--N",
+        str(args_dict["N"]),
+        "--K",
+        str(args_dict["K"]),
+        "--dtype",
+        str(args_dict["dtype"]),
     ]
     return cmd_args
+
 
 def build_mha_cmd(args_dict):
     """
     Build command arguments for MHA test script
     """
     cmd_args = [
-        '--batch', str(args_dict['batch']),
-        '--seq_len', str(args_dict['seq_len']),
-        '--heads', str(args_dict['heads']),
-        '--dim', str(args_dict['dim']),
-        '--dtype', str(args_dict['dtype'])
+        "--batch",
+        str(args_dict["batch"]),
+        "--seq_len",
+        str(args_dict["seq_len"]),
+        "--heads",
+        str(args_dict["heads"]),
+        "--dim",
+        str(args_dict["dim"]),
+        "--dtype",
+        str(args_dict["dtype"]),
     ]
-    if args_dict.get('causal', 'False').lower() == 'true':
-        cmd_args.append('--causal')
+    if args_dict.get("causal", "False").lower() == "true":
+        cmd_args.append("--causal")
     return cmd_args
+
 
 def build_gqa_cmd(args_dict):
     """
     Build command arguments for GQA test script
     """
     cmd_args = [
-        '--batch', str(args_dict['batch']),
-        '--seq_len', str(args_dict['seq_len']),
-        '--heads', str(args_dict['heads']),
-        '--heads_kv', str(args_dict['heads_kv']),
-        '--dim', str(args_dict['dim']),
-        '--dtype', str(args_dict['dtype'])
+        "--batch",
+        str(args_dict["batch"]),
+        "--seq_len",
+        str(args_dict["seq_len"]),
+        "--heads",
+        str(args_dict["heads"]),
+        "--heads_kv",
+        str(args_dict["heads_kv"]),
+        "--dim",
+        str(args_dict["dim"]),
+        "--dtype",
+        str(args_dict["dtype"]),
     ]
-    if args_dict.get('causal', 'False').lower() == 'true':
-        cmd_args.append('--causal')
+    if args_dict.get("causal", "False").lower() == "true":
+        cmd_args.append("--causal")
     return cmd_args
+
 
 def build_mha_decode_cmd(args_dict):
     """
     Build command arguments for MHA decode test script
     """
     cmd_args = [
-        '--batch', str(args_dict['batch']),
-        '--seq_len_q', str(args_dict['seq_len_q']),
-        '--seq_len_kv', str(args_dict['seq_len_kv']),
-        '--heads', str(args_dict['heads']),
-        '--dim', str(args_dict['dim']),
-        '--dtype', str(args_dict['dtype'])
+        "--batch",
+        str(args_dict["batch"]),
+        "--seq_len_q",
+        str(args_dict["seq_len_q"]),
+        "--seq_len_kv",
+        str(args_dict["seq_len_kv"]),
+        "--heads",
+        str(args_dict["heads"]),
+        "--dim",
+        str(args_dict["dim"]),
+        "--dtype",
+        str(args_dict["dtype"]),
     ]
-    if args_dict.get('causal', 'False').lower() == 'true':
-        cmd_args.append('--causal')
+    if args_dict.get("causal", "False").lower() == "true":
+        cmd_args.append("--causal")
     return cmd_args
+
 
 def build_gqa_decode_cmd(args_dict):
     """
     Build command arguments for GQA decode test script
     """
     cmd_args = [
-        '--batch', str(args_dict['batch']),
-        '--seq_len_kv', str(args_dict['seq_len_kv']),
-        '--heads', str(args_dict['heads']),
-        '--groups', str(args_dict['groups']),
-        '--dim', str(args_dict['dim']),
-        '--dtype', str(args_dict['dtype'])
+        "--batch",
+        str(args_dict["batch"]),
+        "--seq_len_kv",
+        str(args_dict["seq_len_kv"]),
+        "--heads",
+        str(args_dict["heads"]),
+        "--groups",
+        str(args_dict["groups"]),
+        "--dim",
+        str(args_dict["dim"]),
+        "--dtype",
+        str(args_dict["dtype"]),
     ]
     return cmd_args
+
 
 def build_mla_decode_cmd(args_dict):
     """
     Build command arguments for MLA decode test script
     """
     cmd_args = [
-        '--batch', str(args_dict['batch']),
-        '--seq_len_kv', str(args_dict['seq_len_kv']),
-        '--heads', str(args_dict['heads']),
-        '--kv_head_num', str(args_dict['kv_head_num']),
-        '--dim', str(args_dict['dim']),
-        '--pe_dim', str(args_dict['pe_dim']),
-        '--dtype', str(args_dict['dtype'])
+        "--batch",
+        str(args_dict["batch"]),
+        "--seq_len_kv",
+        str(args_dict["seq_len_kv"]),
+        "--heads",
+        str(args_dict["heads"]),
+        "--kv_head_num",
+        str(args_dict["kv_head_num"]),
+        "--dim",
+        str(args_dict["dim"]),
+        "--pe_dim",
+        str(args_dict["pe_dim"]),
+        "--dtype",
+        str(args_dict["dtype"]),
     ]
     return cmd_args
+
 
 def build_sparse_mla_cmd(args_dict):
     """
     Build command arguments for Sparse MLA test script
     """
     cmd_args = [
-        '--batch', str(args_dict['batch']),
-        '--seq_len', str(args_dict['seq_len']),
-        '--seq_len_kv', str(args_dict['seq_len_kv']),
-        '--heads', str(args_dict['heads']),
-        '--dim', str(args_dict['dim']),
-        '--tail_dim', str(args_dict['tail_dim']),
-        '--topk', str(args_dict['topk']),
-        '--kv_stride', str(args_dict['kv_stride']),
-        '--kv_group', str(args_dict['kv_group']),
-        '--q_start_index_s', str(args_dict.get('q_start_index_s', 1024)),
-        '--dtype', str(args_dict['dtype'])
+        "--batch",
+        str(args_dict["batch"]),
+        "--seq_len",
+        str(args_dict["seq_len"]),
+        "--seq_len_kv",
+        str(args_dict["seq_len_kv"]),
+        "--heads",
+        str(args_dict["heads"]),
+        "--dim",
+        str(args_dict["dim"]),
+        "--tail_dim",
+        str(args_dict["tail_dim"]),
+        "--topk",
+        str(args_dict["topk"]),
+        "--kv_stride",
+        str(args_dict["kv_stride"]),
+        "--kv_group",
+        str(args_dict["kv_group"]),
+        "--q_start_index_s",
+        str(args_dict.get("q_start_index_s", 1024)),
+        "--dtype",
+        str(args_dict["dtype"]),
     ]
 
     # Handle optional sm_scale parameter
-    if 'sm_scale' in args_dict and args_dict['sm_scale'] != 'None':
-        cmd_args.extend(['--sm_scale', str(args_dict['sm_scale'])])
+    if "sm_scale" in args_dict and args_dict["sm_scale"] != "None":
+        cmd_args.extend(["--sm_scale", str(args_dict["sm_scale"])])
 
     return cmd_args
+
 
 def parse_output(output_lines):
     """
@@ -128,21 +180,22 @@ def parse_output(output_lines):
     results = {}
     for line in output_lines:
         # Extract latency
-        latency_match = re.search(r'latency:\s*([0-9.]+)\s*ms', line)
+        latency_match = re.search(r"latency:\s*([0-9.]+)\s*ms", line)
         if latency_match:
-            results['latency(ms)'] = float(latency_match.group(1))
+            results["latency(ms)"] = float(latency_match.group(1))
 
         # Extract TFlops
-        tflops_match = re.search(r'TFlops:\s*([0-9.]+)', line)
+        tflops_match = re.search(r"TFlops:\s*([0-9.]+)", line)
         if tflops_match:
-            results['TFlops'] = float(tflops_match.group(1))
+            results["TFlops"] = float(tflops_match.group(1))
 
         # Extract Bandwidth
-        bandwidth_match = re.search(r'Bandwidth:\s*([0-9.]+)\s*GB/s', line)
+        bandwidth_match = re.search(r"Bandwidth:\s*([0-9.]+)\s*GB/s", line)
         if bandwidth_match:
-            results['Bandwidth(GB/s)'] = float(bandwidth_match.group(1))
+            results["Bandwidth(GB/s)"] = float(bandwidth_match.group(1))
 
     return results
+
 
 def run_test_script(script_path, args_dict):
     """
@@ -151,19 +204,19 @@ def run_test_script(script_path, args_dict):
     # Build command line arguments based on script type
     script_name = script_path.name.lower()
 
-    if 'gemm' in script_name:
+    if "gemm" in script_name:
         cmd_args = build_gemm_cmd(args_dict)
-    elif 'mha_decode' in script_name:
+    elif "mha_decode" in script_name:
         cmd_args = build_mha_decode_cmd(args_dict)
-    elif 'gqa_decode' in script_name:
+    elif "gqa_decode" in script_name:
         cmd_args = build_gqa_decode_cmd(args_dict)
-    elif 'mla_decode' in script_name:
+    elif "mla_decode" in script_name:
         cmd_args = build_mla_decode_cmd(args_dict)
-    elif 'sparse_mla' in script_name:
+    elif "sparse_mla" in script_name:
         cmd_args = build_sparse_mla_cmd(args_dict)
-    elif 'mha' in script_name:
+    elif "mha" in script_name:
         cmd_args = build_mha_cmd(args_dict)
-    elif 'gqa' in script_name:
+    elif "gqa" in script_name:
         cmd_args = build_gqa_cmd(args_dict)
     else:
         raise ValueError(f"Unsupported script type: {script_path}")
@@ -187,11 +240,12 @@ def run_test_script(script_path, args_dict):
         print(f"Error running script: {e}")
         return None
 
+
 def main():
-    parser = argparse.ArgumentParser(description='Batch run test scripts with CSV parameters')
-    parser.add_argument('--script', required=True, help='Path to the test script (.py file)')
-    parser.add_argument('--input_csv', required=True, help='Path to input CSV file with parameters')
-    parser.add_argument('--output_csv', required=True, help='Path to output CSV file for results')
+    parser = argparse.ArgumentParser(description="Batch run test scripts with CSV parameters")
+    parser.add_argument("--script", required=True, help="Path to the test script (.py file)")
+    parser.add_argument("--input_csv", required=True, help="Path to input CSV file with parameters")
+    parser.add_argument("--output_csv", required=True, help="Path to output CSV file for results")
 
     args = parser.parse_args()
 
@@ -209,7 +263,7 @@ def main():
 
     # Read CSV file
     try:
-        with open(input_csv_path, 'r') as f:
+        with open(input_csv_path, "r") as f:
             reader = csv.DictReader(f)
             input_params = list(reader)
     except Exception as e:
@@ -221,7 +275,7 @@ def main():
         return 1
 
     # Get headers as output CSV fields
-    fieldnames = list(input_params[0].keys()) + ['latency(ms)', 'TFlops', 'Bandwidth(GB/s)']
+    fieldnames = list(input_params[0].keys()) + ["latency(ms)", "TFlops", "Bandwidth(GB/s)"]
 
     # Prepare output file
     output_csv_path = Path(args.output_csv)
@@ -237,7 +291,7 @@ def main():
         output_lines = run_test_script(script_path, params)
         if output_lines is None:
             print("Skipping this test due to execution error")
-            error_result = {**params, 'latency(ms)': None, 'TFlops': None, 'Bandwidth(GB/s)': None}
+            error_result = {**params, "latency(ms)": None, "TFlops": None, "Bandwidth(GB/s)": None}
             results.append(error_result)
             continue
 
@@ -252,7 +306,7 @@ def main():
 
     # Write results to CSV file
     try:
-        with open(output_csv_path, 'w', newline='') as f:
+        with open(output_csv_path, "w", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerows(results)
@@ -267,28 +321,31 @@ def main():
         for field in fieldnames:
             col_widths[field] = len(field)
             for result in results:
-                value = result.get(field, '')
+                value = result.get(field, "")
                 col_widths[field] = max(col_widths[field], len(str(value)))
 
         # Print header
         header = " | ".join(field.ljust(col_widths[field]) for field in fieldnames)
-        print("\n" + "="*len(header))
+        print("\n" + "=" * len(header))
         print("FINAL RESULTS")
-        print("="*len(header))
+        print("=" * len(header))
         print(header)
-        print("-"*len(header))
+        print("-" * len(header))
 
         # Print data rows
         for result in results:
-            row = " | ".join(str(result.get(field, '')).ljust(col_widths[field]) for field in fieldnames)
+            row = " | ".join(
+                str(result.get(field, "")).ljust(col_widths[field]) for field in fieldnames
+            )
             print(row)
-        print("="*len(header))
+        print("=" * len(header))
 
         print(f"\nResults saved to: {output_csv_path}")
     else:
         print("No results to display")
 
     return 0
+
 
 if __name__ == "__main__":
     sys.exit(main())

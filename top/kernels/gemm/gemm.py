@@ -7,7 +7,7 @@ from top.utils import get_sm_version
 from top.kernels import Kernel
 
 
-def _gemm_kernel(M, N, K, dtype='float16'):
+def _gemm_kernel(M, N, K, dtype="float16"):
     accum_dtype = "float"
 
     @tilelang.jit(out_idx=[-1], compile_flags=["-O3", "-DENABLE_BF16"])
@@ -15,20 +15,24 @@ def _gemm_kernel(M, N, K, dtype='float16'):
 
         @T.prim_func
         def _gemm_main(
-                A: T.Tensor((M, K), dtype),  # type: ignore
-                B: T.Tensor((K, N), dtype),  # type: ignore
-                C: T.Tensor((M, N), dtype),  # type: ignore
+            A: T.Tensor((M, K), dtype),  # type: ignore
+            B: T.Tensor((K, N), dtype),  # type: ignore
+            C: T.Tensor((M, N), dtype),  # type: ignore
         ):
-            with T.Kernel(
-                    T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):
+            with T.Kernel(T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (
+                bx,
+                by,
+            ):
                 A_shared = T.alloc_shared((block_M, block_K), dtype)
                 B_shared = T.alloc_shared((block_K, block_N), dtype)
                 C_local = T.alloc_fragment((block_M, block_N), accum_dtype)
                 C_shared = T.alloc_shared((block_M, block_N), dtype)
 
-                T.annotate_layout({
-                    C_shared: tilelang.layout.make_swizzled_layout(C_shared),
-                })
+                T.annotate_layout(
+                    {
+                        C_shared: tilelang.layout.make_swizzled_layout(C_shared),
+                    }
+                )
                 T.use_swizzle(10, enable=enable_rasteration)
 
                 T.clear(C_local)
@@ -71,7 +75,7 @@ class gemm_kernel(Kernel):
                 "block_K": 32,
                 "num_stages": 2,
                 "threads": 128,
-                "enable_rasteration": True
+                "enable_rasteration": True,
             }
         elif sm_version in {90}:
             return {
@@ -80,7 +84,7 @@ class gemm_kernel(Kernel):
                 "block_K": 64,
                 "num_stages": 3,
                 "threads": 256,
-                "enable_rasteration": True
+                "enable_rasteration": True,
             }
         else:
             return {
@@ -89,7 +93,7 @@ class gemm_kernel(Kernel):
                 "block_K": 32,
                 "num_stages": 0,
                 "threads": 128,
-                "enable_rasteration": True
+                "enable_rasteration": True,
             }
 
     @property
@@ -102,19 +106,24 @@ class gemm_kernel(Kernel):
         threads = [128, 256]
         enable_rasteration = [True, False]
         _configs = list(
-            itertools.product(block_M, block_N, block_K, num_stages, threads, enable_rasteration))
+            itertools.product(block_M, block_N, block_K, num_stages, threads, enable_rasteration)
+        )
 
-        configs = [{
-            'block_M': c[0],
-            'block_N': c[1],
-            'block_K': c[2],
-            'num_stages': c[3],
-            'threads': c[4],
-            'enable_rasteration': c[5]
-        } for c in _configs]
+        configs = [
+            {
+                "block_M": c[0],
+                "block_N": c[1],
+                "block_K": c[2],
+                "num_stages": c[3],
+                "threads": c[4],
+                "enable_rasteration": c[5],
+            }
+            for c in _configs
+        ]
         return configs
 
     def forward(self, A: torch.Tensor, B: torch.Tensor):
         return self.kernel(**self.config)(A, B)
+
 
 # TODO: add persistent, split-k, steam-k...

@@ -1,3 +1,4 @@
+# flake8: noqa: F401,F403
 # isort: skip_file
 # 4 levels of abstraction from low to high:
 from .kernels import *

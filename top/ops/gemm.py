@@ -1,5 +1,3 @@
-from typing import Dict, Optional
-
 import torch
 
 from top.kernels import Kernel, gemm_kernel

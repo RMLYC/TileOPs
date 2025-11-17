@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from typing import Dict, Optional, Union
 
 import torch
 
@@ -63,7 +62,7 @@ class Op(ABC):
             self.kernel_map[name] = kernel_type
 
     def autotune(self):
-        """Autotune all kernels of the op"""
+        """Autotune all kernels of the op."""
         for attr_name in dir(self):
             attr = getattr(self, attr_name)
             if isinstance(attr, Kernel):
@@ -74,5 +73,5 @@ class Op(ABC):
         raise NotImplementedError("forward method is not implemented")
 
     def __call__(self, *args, **kwargs):
-        """Make the op callable - delegates to forward()"""
+        """Make the op callable - delegates to forward()."""
         return self.forward(*args, **kwargs)

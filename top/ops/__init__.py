@@ -1,4 +1,5 @@
-from .op import Op  # noqa: F401 # isort: split
+# flake8: noqa: F401,F403
+from .op import Op # isort: split
 from .gemm import *
 from .gqa import *
 from .gqa_decode import *

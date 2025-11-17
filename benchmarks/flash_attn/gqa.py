@@ -194,15 +194,13 @@ class gqa_benchmark(Benchmark):
         if self.grad:
             Q, K, V, _, _, _ = self.gqa_bwd_bench.gen_inputs()
             return Q, K, V
-        else:
-            return self.gqa_fwd_bench.gen_inputs()
+        return self.gqa_fwd_bench.gen_inputs()
 
     def ref_program(self, Q: torch.Tensor, K: torch.Tensor, V: torch.Tensor):
 
         output = self.gqa_fwd_bench.ref_program(Q, K, V)[0]
-        if not self.grad:
-            return output
-        else:
+        if self.grad:
             loss = output.sum()
             loss.backward()
             return output, Q.grad, K.grad, V.grad
+        return output

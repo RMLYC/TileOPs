@@ -1,5 +1,3 @@
-from typing import Dict, Optional
-
 import torch
 
 from top.kernels import Kernel, mha_decode_kernel
@@ -10,7 +8,7 @@ __all__ = ["mha_decode"]
 
 
 class mha_decode(Op):
-    """Layout: BSHD"""
+    """Layout: BSHD."""
 
     def __init__(
         self,

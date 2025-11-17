@@ -21,8 +21,7 @@ class gqa_decode_benchmark(Benchmark):
     @property
     def total_flops(self):
         flops_per_matmul = 2.0 * self.batch * self.heads * self.seq_len_kv * self.dim
-        flops = flops_per_matmul * 2
-        return flops
+        return flops_per_matmul * 2
 
     @property
     def total_memory(self):
@@ -64,5 +63,4 @@ class gqa_decode_benchmark(Benchmark):
             output_bhsd = F.scaled_dot_product_attention(
                 q_bhsd, k_bhsd, v_bhsd, attn_mask=mask, enable_gqa=True
             )
-        output = output_bhsd.transpose(1, 2).squeeze(1).contiguous()
-        return output
+        return output_bhsd.transpose(1, 2).squeeze(1).contiguous()

@@ -72,8 +72,8 @@ skip = [
     ".venv"
 ]
 
-[flake8]
-max-line-length = 100
+[tools.flake8]
+max-line-length = 120
 extend-ignore = E203, W503, VNE001, D101, D102, D107  # 常见 black 推荐的组合
 
 [tool.ruff.lint]

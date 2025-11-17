@@ -1,5 +1,4 @@
 import itertools
-from typing import Optional, Tuple
 
 import tilelang
 import tilelang.language as T

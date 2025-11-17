@@ -201,9 +201,8 @@ class mha_benchmark(Benchmark):
             )
         output = output_bhsd.transpose(1, 2).contiguous()
 
-        if not self.grad:
-            return output
-        else:
+        if self.grad:
             loss = output.sum()
             loss.backward()
             return output, Q.grad, K.grad, V.grad
+        return output

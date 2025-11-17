@@ -1,5 +1,3 @@
-from typing import Dict, Optional
-
 import torch
 
 from top.kernels import (
@@ -19,7 +17,7 @@ __all__ = ["gqa_fwd", "gqa_bwd"]
 
 
 class gqa_fwd(Op):
-    """Layout: BSHD"""
+    """Layout: BSHD."""
 
     def __init__(
         self,
@@ -56,7 +54,7 @@ class gqa_fwd(Op):
 
 
 class gqa_bwd(Op):
-    """Layout: BSHD"""
+    """Layout: BSHD."""
 
     def __init__(
         self,

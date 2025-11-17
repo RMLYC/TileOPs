@@ -1,5 +1,3 @@
-from typing import Dict, Optional
-
 import torch
 
 from top.kernels import (
@@ -19,7 +17,7 @@ __all__ = ["mha_fwd", "mha_bwd"]
 
 
 class mha_fwd(Op):
-    """Layout: BSHD"""
+    """Layout: BSHD."""
 
     def __init__(
         self,
@@ -54,7 +52,7 @@ class mha_fwd(Op):
 
 
 class mha_bwd(Op):
-    """Layout: BSHD"""
+    """Layout: BSHD."""
 
     def __init__(
         self,

@@ -40,10 +40,7 @@ class sparse_mla_decode_benchmark(Benchmark):
 
     @property
     def total_flops(self):
-        flops = (
-            self.batch * self.seq_len * (2 * self.dim + self.tail_dim) * self.topk * 2 * self.heads
-        )
-        return flops
+        return self.batch * self.seq_len * (2 * self.dim + self.tail_dim) * self.topk * 2 * self.heads
 
     @property
     def total_memory(self):
@@ -120,7 +117,6 @@ class sparse_mla_decode_benchmark(Benchmark):
         v = kv[..., :dim]
 
         b, _, _, dim_v = v.shape
-        num_kv_per_index = 1
         g_index = g
         h_index = h // g
         compressed_causal_mask = torch.arange(

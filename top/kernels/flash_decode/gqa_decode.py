@@ -1,5 +1,4 @@
 import itertools
-from typing import Optional
 
 import tilelang
 import tilelang.language as T
@@ -14,6 +13,7 @@ def _gqa_decode_kernel(batch, heads, groups, seqlen_kv, dim):
     scale = (1.0 / dim) ** 0.5 * 1.44269504  # log2(e)
     dtype = "float16"
     accum_dtype = "float"
+    mask_dtype = "uint8"
 
     @tilelang.jit(
         out_idx=[6],
@@ -39,7 +39,7 @@ def _gqa_decode_kernel(batch, heads, groups, seqlen_kv, dim):
             Q: T.Tensor(shape_q, dtype),
             K: T.Tensor(shape_k, dtype),
             V: T.Tensor(shape_v, dtype),
-            mask: T.Tensor([batch, seqlen_kv, groups], "uint8"),
+            mask: T.Tensor([batch, seqlen_kv, groups], mask_dtype),
             Output: T.Tensor([batch, heads, dim], dtype),
         ):
             with T.Kernel(batch, heads // valid_block_H, num_split, threads=threads) as (
@@ -53,7 +53,7 @@ def _gqa_decode_kernel(batch, heads, groups, seqlen_kv, dim):
                 O_shared = T.alloc_shared([valid_block_H, dim], dtype)
                 acc_s = T.alloc_fragment([block_H, block_N], accum_dtype)
                 acc_s_cast = T.alloc_fragment([block_H, block_N], dtype)
-                mask_local = T.alloc_fragment([block_N], "uint8")
+                mask_local = T.alloc_fragment([block_N], mask_dtype)
                 acc_o = T.alloc_fragment([block_H, dim], accum_dtype)
                 scores_max = T.alloc_fragment([block_H], accum_dtype)
                 scores_max_prev = T.alloc_fragment([block_H], accum_dtype)
@@ -109,7 +109,7 @@ def _gqa_decode_kernel(batch, heads, groups, seqlen_kv, dim):
             Q: T.Tensor(shape_q, dtype),
             K: T.Tensor(shape_k, dtype),
             V: T.Tensor(shape_v, dtype),
-            mask: T.Tensor([batch, seqlen_kv, groups], "uint8"),
+            mask: T.Tensor([batch, seqlen_kv, groups], mask_dtype),
             glse: T.Tensor([batch, heads, num_split], dtype),
             Output_partial: T.Tensor(part_shape, dtype),
         ):
@@ -124,7 +124,7 @@ def _gqa_decode_kernel(batch, heads, groups, seqlen_kv, dim):
                 O_shared = T.alloc_shared([valid_block_H, dim], dtype)
                 acc_s = T.alloc_fragment([block_H, block_N], accum_dtype)
                 acc_s_cast = T.alloc_fragment([block_H, block_N], dtype)
-                mask_local = T.alloc_fragment([block_N], "uint8")
+                mask_local = T.alloc_fragment([block_N], mask_dtype)
                 acc_o = T.alloc_fragment([block_H, dim], accum_dtype)
                 scores_max = T.alloc_fragment([block_H], accum_dtype)
                 scores_max_prev = T.alloc_fragment([block_H], accum_dtype)
@@ -252,7 +252,7 @@ def _gqa_decode_kernel(batch, heads, groups, seqlen_kv, dim):
             Q: T.Tensor(shape_q, dtype),
             K: T.Tensor(shape_k, dtype),
             V: T.Tensor(shape_v, dtype),
-            mask: T.Tensor([batch, seqlen_kv, groups], "uint8"),
+            mask: T.Tensor([batch, seqlen_kv, groups], mask_dtype),
             glse: T.Tensor([batch, heads, num_split], dtype),
             Output_partial: T.Tensor(part_shape, dtype),
             Output: T.Tensor(shape_o, dtype),
@@ -265,7 +265,7 @@ def _gqa_decode_kernel(batch, heads, groups, seqlen_kv, dim):
             Q: T.Tensor(shape_q, dtype),
             K: T.Tensor(shape_k, dtype),
             V: T.Tensor(shape_v, dtype),
-            mask: T.Tensor([batch, seqlen_kv, groups], "uint8"),
+            mask: T.Tensor([batch, seqlen_kv, groups], mask_dtype),
             glse: T.Tensor([batch, heads, num_split], dtype),
             Output_partial: T.Tensor(part_shape, dtype),
             Output: T.Tensor(shape_o, dtype),
@@ -274,8 +274,7 @@ def _gqa_decode_kernel(batch, heads, groups, seqlen_kv, dim):
 
         if num_split > 1:
             return gqa_decode_split
-        else:
-            return gqa_decode_no_split
+        return gqa_decode_no_split
 
     return _gqa_decode_func
 

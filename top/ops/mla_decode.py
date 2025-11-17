@@ -1,5 +1,3 @@
-from typing import Dict, Optional
-
 import torch
 
 from top.kernels import Kernel, mla_decode_kernel, mla_decode_ws_kernel
@@ -11,7 +9,7 @@ __all__ = ["mla_decode"]
 
 
 class mla_decode(Op):
-    """Layout: BSHD"""
+    """Layout: BSHD."""
 
     def __init__(
         self,

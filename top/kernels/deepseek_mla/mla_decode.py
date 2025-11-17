@@ -1,5 +1,4 @@
 import itertools
-from typing import Optional
 
 import tilelang
 import tilelang.language as T
@@ -259,8 +258,7 @@ def _mla_decode_kernel(batch, heads, kv_head_num, seqlen_kv, dim, pe_dim, dtype=
 
         if num_split > 1:
             return main_split
-        else:
-            return main_no_split
+        return main_no_split
 
     return _mla_decode_func
 
@@ -1032,8 +1030,7 @@ def _mla_decode_ws_kernel(batch, heads, kv_head_num, seqlen_kv, dim, pe_dim, dty
 
         if num_split > 1:
             return main_split
-        else:
-            return main_no_split
+        return main_no_split
 
     return _mla_decode_ws_func
 

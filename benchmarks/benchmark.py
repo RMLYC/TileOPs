@@ -27,16 +27,14 @@ class Benchmark(ABC):
         raise NotImplementedError
 
     def check(self, op, *inputs, atol=1e-2, rtol=1e-2):
-        """Check the correctness of the op"""
-
+        """Check the correctness of the op."""
         try:
             outputs_ref = self.ref_program(*inputs)
         except RuntimeError as e:
             if "out of memory" in str(e):
                 print(f"⚠️  Skipped checking {self.__class__.__name__} due to OOM in ref: {e}")
                 return
-            else:
-                raise e
+            raise e
 
         if isinstance(outputs_ref, torch.Tensor):
             outputs_ref = (outputs_ref,)
@@ -64,16 +62,14 @@ class Benchmark(ABC):
         print(f"All checks passed for {op.__class__.__name__}.✅")
 
     def check_fn(self, fn, *inputs, atol=1e-2, rtol=1e-2, grad=True):
-        """Check the correctness of the function and layer"""
-
+        """Check the correctness of the function and layer."""
         try:
             outputs_ref = self.ref_program(*inputs)
         except RuntimeError as e:
             if "out of memory" in str(e):
                 print(f"⚠️  Skipped checking {self.__class__.__name__} due to OOM in ref: {e}")
                 return
-            else:
-                raise e
+            raise e
 
         if isinstance(outputs_ref, torch.Tensor):
             outputs_ref = (outputs_ref,)
@@ -89,8 +85,8 @@ class Benchmark(ABC):
             loss.backward()
             outputs = []
             outputs.append(output)
-            for input in inputs:
-                outputs.append(input.grad)
+            for _input in inputs:
+                outputs.append(_input.grad)
 
         if isinstance(outputs, list):
             outputs = tuple(outputs)
@@ -112,8 +108,7 @@ class Benchmark(ABC):
         print(f"All checks passed for {fn.__class__.__name__}.✅")
 
     def profile(self, op, *inputs, warmup=100, rep=100):
-        """Benchmark the perf of the op"""
-
+        """Benchmark the perf of the op."""
         print(f"===== Profiling {op.__class__.__name__} =====")
         with torch.no_grad():
             # Always use cupti backend for better accuracy

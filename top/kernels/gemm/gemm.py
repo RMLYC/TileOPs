@@ -1,5 +1,4 @@
 import itertools
-from typing import Optional
 
 import tilelang
 import tilelang.language as T
@@ -72,7 +71,7 @@ class gemm_kernel(Kernel):
         # From tilelang/examples/gemm/example_gemm_autotune.py
         sm_version = get_sm_version()
         if sm_version in {80}:
-            return {
+            config = {
                 "block_M": 128,
                 "block_N": 256,
                 "block_K": 32,
@@ -81,7 +80,7 @@ class gemm_kernel(Kernel):
                 "enable_rasteration": True,
             }
         elif sm_version in {90}:
-            return {
+            config = {
                 "block_M": 128,
                 "block_N": 256,
                 "block_K": 64,
@@ -90,7 +89,7 @@ class gemm_kernel(Kernel):
                 "enable_rasteration": True,
             }
         else:
-            return {
+            config = {
                 "block_M": 128,
                 "block_N": 256,
                 "block_K": 32,
@@ -98,6 +97,7 @@ class gemm_kernel(Kernel):
                 "threads": 128,
                 "enable_rasteration": True,
             }
+        return config
 
     @property
     def autotune_configs(self) -> list[dict]:

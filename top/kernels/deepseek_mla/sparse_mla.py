@@ -1,5 +1,4 @@
 import itertools
-from typing import Optional
 
 import tilelang
 import tilelang.language as T
@@ -28,7 +27,7 @@ def _sparse_mla_kernel(
     dtype="float16",
 ):
     """
-    This code implements sparse attn
+    This code implements sparse attn.
     Note that the first kv_stride - 1 token's out would be nan. since this isn't used, we assume it doesn't matter. (**still, one might have to handle carefully in backward to avoid dout * nan propagated!**)
     It might be OK to set these nan to zero, but we assume it might serve as a reminder of taking care of these out in 'delta = out * dout'.
     The above feature might be replaced with out being undefined if we fix CP0 logic (this logic is currently wrong due to some bug in compiler)
@@ -39,7 +38,7 @@ def _sparse_mla_kernel(
     assert tail_dim == tilelang.math.next_power_of_2(
         tail_dim
     ), f"haven't check padding correctness yet, dim={tail_dim}"
-    assert is_causal == True, "non-causal is not supported"
+    assert is_causal, "non-causal is not supported"
     if sm_scale is None:
         sm_scale = (1.0 / (dim + tail_dim)) ** 0.5 * 1.44269504  # log2(e)
     else:
@@ -50,7 +49,6 @@ def _sparse_mla_kernel(
     kv_shape = [batch, seq_len_kv, kv_group, dim + tail_dim]
     o_shape = [batch, seq_len, heads, dim]
     indices_shape = [batch, seq_len, kv_group, topk]
-    lse_shape = [batch, seq_len, heads]
     indices_dtype = "int32"
     accum_dtype = "float"
 
@@ -72,7 +70,6 @@ def _sparse_mla_kernel(
     )
     def _sparse_mla_fwd_func(block_I, threads):
 
-        G = kv_group
         heads = head_kv
         # print(f'heads = {heads}')
         padded_H = max(tilelang.math.next_power_of_2(head_kv), 16)

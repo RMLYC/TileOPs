@@ -1,5 +1,3 @@
-from typing import Dict, Optional
-
 import torch
 
 from top.kernels import Kernel, sparse_mla_kernel
@@ -10,7 +8,7 @@ __all__ = ["sparse_mla"]
 
 
 class sparse_mla(Op):
-    """Layout: BSHD"""
+    """Layout: BSHD."""
 
     def __init__(
         self,

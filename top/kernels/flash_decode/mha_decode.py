@@ -1,5 +1,4 @@
 import itertools
-from typing import Optional
 
 import tilelang
 import tilelang.language as T
@@ -350,8 +349,7 @@ def _mha_decode_kernel(batch, heads, seqlen_q, seqlen_kv, dim, is_causal):
 
         if num_split > 1:
             return mha_decode_split
-        else:
-            return mha_decode_no_split
+        return mha_decode_no_split
 
     return _mha_decode_func
 

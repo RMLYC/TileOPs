@@ -1,9 +1,6 @@
-from typing import Dict, Optional
-
 import torch
 
 from top.kernels import Kernel, gqa_decode_kernel
-from top.utils import is_hopper
 
 from .op import Op
 
@@ -11,7 +8,7 @@ __all__ = ["gqa_decode"]
 
 
 class gqa_decode(Op):
-    """Layout: BSHD"""
+    """Layout: BSHD."""
 
     def __init__(
         self,

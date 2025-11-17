@@ -11,7 +11,7 @@ from pathlib import Path
 
 def build_gemm_cmd(args_dict):
     """
-    Build command arguments for GEMM test script
+    Build command arguments for GEMM test script.
     """
     cmd_args = [
         "--M",
@@ -28,7 +28,7 @@ def build_gemm_cmd(args_dict):
 
 def build_mha_cmd(args_dict):
     """
-    Build command arguments for MHA test script
+    Build command arguments for MHA test script.
     """
     cmd_args = [
         "--batch",
@@ -49,7 +49,7 @@ def build_mha_cmd(args_dict):
 
 def build_gqa_cmd(args_dict):
     """
-    Build command arguments for GQA test script
+    Build command arguments for GQA test script.
     """
     cmd_args = [
         "--batch",
@@ -72,7 +72,7 @@ def build_gqa_cmd(args_dict):
 
 def build_mha_decode_cmd(args_dict):
     """
-    Build command arguments for MHA decode test script
+    Build command arguments for MHA decode test script.
     """
     cmd_args = [
         "--batch",
@@ -95,7 +95,7 @@ def build_mha_decode_cmd(args_dict):
 
 def build_gqa_decode_cmd(args_dict):
     """
-    Build command arguments for GQA decode test script
+    Build command arguments for GQA decode test script.
     """
     cmd_args = [
         "--batch",
@@ -116,7 +116,7 @@ def build_gqa_decode_cmd(args_dict):
 
 def build_mla_decode_cmd(args_dict):
     """
-    Build command arguments for MLA decode test script
+    Build command arguments for MLA decode test script.
     """
     cmd_args = [
         "--batch",
@@ -139,7 +139,7 @@ def build_mla_decode_cmd(args_dict):
 
 def build_sparse_mla_cmd(args_dict):
     """
-    Build command arguments for Sparse MLA test script
+    Build command arguments for Sparse MLA test script.
     """
     cmd_args = [
         "--batch",
@@ -175,7 +175,7 @@ def build_sparse_mla_cmd(args_dict):
 
 def parse_output(output_lines):
     """
-    Parse script output to extract latency, TFlops, and Bandwidth information
+    Parse script output to extract latency, TFlops, and Bandwidth information.
     """
     results = {}
     for line in output_lines:
@@ -199,7 +199,7 @@ def parse_output(output_lines):
 
 def run_test_script(script_path, args_dict):
     """
-    Run the specified test script and return output
+    Run the specified test script and return output.
     """
     # Build command line arguments based on script type
     script_name = script_path.name.lower()

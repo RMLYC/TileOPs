@@ -25,8 +25,7 @@ class mla_decode_benchmark(Benchmark):
         # pv_flops = 2 * batch * heads *  seq_len_kv * dim
         qk_flops = 2 * self.batch * self.heads * self.seq_len_kv * (self.dim + self.pe_dim)
         pv_flops = 2 * self.batch * self.heads * self.seq_len_kv * self.dim
-        flops = qk_flops + pv_flops
-        return flops
+        return qk_flops + pv_flops
 
     @property
     def total_memory(self):
@@ -102,5 +101,4 @@ class mla_decode_benchmark(Benchmark):
         out = einsum(
             attention, KV, "b g h s, b h s d -> b g h d"
         )  # [batch_size, num_head_groups, groups, dim]
-        out = rearrange(out, "b g h d -> b (h g) d")  # [batch_size, heads, dim]
-        return out
+        return rearrange(out, "b g h d -> b (h g) d")  # [batch_size, heads, dim]

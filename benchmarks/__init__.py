@@ -1,4 +1,6 @@
-from .benchmark import Benchmark  # noqa: F401 # isort: split
+# flake8: noqa: F401,F403
+# noqa: F401,F403
+from .benchmark import Benchmark  # isort: split
 from .flash_attn import *
 from .flash_decode import *
 from .gemm import *

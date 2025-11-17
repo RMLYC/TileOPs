@@ -7,12 +7,12 @@ __all__ = ['sparse_mla_fn']
 
 
 class sparse_mla_ctx(torch.autograd.Function):
-    
+
     @staticmethod
     def forward(ctx, Q, KV, Indices, fwd_op):
         O = fwd_op(Q, KV, Indices)
         return O
-    
+
     @staticmethod
     def backward(ctx, dO):
         raise NotImplementedError("Backward pass is not implemented for sparse MLA.")
@@ -51,6 +51,6 @@ class sparse_mla_fn(Function):
 
         self.fwd_op = sparse_mla(batch, heads, seq_len, seq_len_kv, dim, tail_dim, topk, kv_stride, kv_group, q_start_index_s, sm_scale, is_causal, dtype, tune=tune)
 
-    
+
     def forward(self, Q: torch.Tensor, KV: torch.Tensor, Indices: torch.Tensor):
         return sparse_mla_ctx.apply(Q, KV, Indices, self.fwd_op)

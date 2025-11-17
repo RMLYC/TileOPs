@@ -801,5 +801,3 @@ class gqa_fwd_wgmma_pipelined_kernel(Kernel):
                                                    self.is_causal, self.dtype_str, self.config["block_M"],
                                                    self.config["block_N"], self.config["num_stages"],
                                                    self.config["threads"], Q, K, V)
-
-

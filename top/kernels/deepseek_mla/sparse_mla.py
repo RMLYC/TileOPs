@@ -50,7 +50,7 @@ def _sparse_mla_kernel(
     indices_dtype = "int32"
     accum_dtype = "float"
 
-    
+
     @tilelang.jit(
     out_idx=[-1],
     compile_flags=[
@@ -323,7 +323,7 @@ def _sparse_mla_kernel(
                         T.cp_async_barrier_noinc(bar_k_1_ready[0])
 
         return _sparse_mla_fwd_main
-      
+
     return _sparse_mla_fwd_func
 
 
@@ -405,7 +405,7 @@ class sparse_mla_kernel(Kernel):
     @property
     def default_config(self) -> dict:
         return {"block_I": 64, "threads": 384}
-    
+
     @property
     def autotune_configs(self) -> list[dict]:
         block_I = [64, 128]
@@ -423,7 +423,7 @@ class sparse_mla_kernel(Kernel):
                                              self.tail_dim, self.topk, self.kv_stride, self.q_start_index_s, self.kv_group, self.sm_scale,
                                              self.is_causal, self.CP0, self.dtype_str, self.config["block_I"], self.config["threads"],
                                              Q, KV, Indices)
-    
+
 
     # @property
     def supply_prog(self, params=None) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
@@ -443,7 +443,7 @@ class sparse_mla_kernel(Kernel):
                             max(1, ((t + int(self.q_start_index_s)) // self.kv_stride)),
                             self.seq_len_kv))[:self.topk]
                     Indices[b, t, h, :len(i_i)] = i_i
-        
+
         return Q, KV, Indices
 
     def autotune(self, warmup=10, rep=10):  # Removed supply_prog parameter

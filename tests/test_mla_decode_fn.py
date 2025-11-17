@@ -20,7 +20,7 @@ def test_mla_decode_fn(B, kv_head_num, S_kv, H, D, Pe_D, dtype):
     except Exception as e:
         print(f"❌ mla_fn test failed: {e}")
         raise
-    
+
     try:
         print("Testing mla_layer...")
         benchmark.check_fn(mla_layer, *inputs, grad=False)

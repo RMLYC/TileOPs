@@ -21,7 +21,7 @@ def _mla_decode_kernel(batch, heads, kv_head_num, seqlen_kv, dim, pe_dim, dtype=
             },
             compile_flags=["-O3", "-DENABLE_BF16"])
     def _mla_decode_func(block_H, block_N, num_split, num_stages, threads=128):
-        
+
         VALID_BLOCK_H = min(block_H, kv_group_num)
 
         @T.macro
@@ -234,7 +234,7 @@ def _mla_decode_kernel(batch, heads, kv_head_num, seqlen_kv, dim, pe_dim, dtype=
             return main_split
         else:
             return main_no_split
-        
+
     return _mla_decode_func
 
 
@@ -258,7 +258,7 @@ def _mla_decode_wrapped_kernel(
     K_pe: torch.Tensor,
     glse: torch.Tensor,
     Output_partial: torch.Tensor
-) -> torch.Tensor:  
+) -> torch.Tensor:
     return _mla_decode_kernel(batch, heads, kv_head_num, seqlen_kv, dim, pe_dim, dtype)(
         block_H, block_N, num_split, num_stages, threads)(
             Q, Q_pe, Kv, K_pe, glse, Output_partial)
@@ -357,7 +357,7 @@ class mla_decode_kernel(Kernel):
             self.config["block_N"], self.config["num_stages"],
             self.config["threads"], self.config["num_split"],
             Q, Q_pe, K, K_pe, glse, Output_partial)
-    
+
 
 
 def _mla_decode_ws_kernel(batch, heads, kv_head_num, seqlen_kv, dim, pe_dim, dtype='float16'):
@@ -887,7 +887,7 @@ def _mla_decode_ws_kernel(batch, heads, kv_head_num, seqlen_kv, dim, pe_dim, dty
             return main_split
         else:
             return main_no_split
-        
+
     return _mla_decode_ws_func
 
 
@@ -910,8 +910,8 @@ def _mla_decode_ws_wrapped_kernel(
     Kv: torch.Tensor,
     K_pe: torch.Tensor,
     glse: torch.Tensor,
-    Output_partial: torch.Tensor 
-) -> torch.Tensor: 
+    Output_partial: torch.Tensor
+) -> torch.Tensor:
     return _mla_decode_ws_kernel(batch, heads, kv_head_num, seqlen_kv, dim, pe_dim, dtype)(
         block_H, block_N, num_split, num_stages, threads)(
             Q, Q_pe, Kv, K_pe, glse, Output_partial)
@@ -1009,4 +1009,4 @@ class mla_decode_ws_kernel(Kernel):
             self.config["block_N"], self.config["num_stages"],
             self.config["threads"], self.config["num_split"],
             Q, Q_pe, K, K_pe, glse, Output_partial)
-    
+

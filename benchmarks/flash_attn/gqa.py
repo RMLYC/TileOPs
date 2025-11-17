@@ -127,7 +127,7 @@ class gqa_bwd_benchmark(Benchmark):
 
 
 class gqa_benchmark(Benchmark):
-    
+
     def __init__(self, batch, heads, heads_kv, seq_len, dim, is_causal, dtype, grad=True):
         self.batch = batch
         self.heads = heads
@@ -139,7 +139,7 @@ class gqa_benchmark(Benchmark):
         self.grad = grad
 
         self.gqa_fwd_bench = gqa_fwd_benchmark(batch, heads, heads_kv, seq_len, dim, is_causal, dtype)
-        self.gqa_bwd_bench = gqa_bwd_benchmark(batch, heads, heads_kv, seq_len, dim, is_causal, dtype)  
+        self.gqa_bwd_bench = gqa_bwd_benchmark(batch, heads, heads_kv, seq_len, dim, is_causal, dtype)
 
     @property
     def total_flops(self):
@@ -148,14 +148,14 @@ class gqa_benchmark(Benchmark):
     @property
     def total_memory(self):
         return self.gqa_fwd_bench.total_memory + self.gqa_bwd_bench.total_memory
-    
+
     def gen_inputs(self):
         if self.grad:
             Q, K, V, _, _, _ = self.gqa_bwd_bench.gen_inputs()
             return Q, K, V
         else:
             return self.gqa_fwd_bench.gen_inputs()
-        
+
     def ref_program(self, Q: torch.Tensor, K: torch.Tensor, V: torch.Tensor):
 
         output = self.gqa_fwd_bench.ref_program(Q, K, V)[0]
@@ -165,4 +165,4 @@ class gqa_benchmark(Benchmark):
             loss = output.sum()
             loss.backward()
             return output, Q.grad, K.grad, V.grad
-        
+

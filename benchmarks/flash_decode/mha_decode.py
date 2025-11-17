@@ -29,7 +29,7 @@ class mha_decode_benchmark(Benchmark):
         # Q: batch * seq_len_q * heads * dim
         # K, V: batch * seq_len_kv * heads * dim
         # Output: batch * seq_len_q * heads * dim
-        return (self.batch * self.heads * (2 * self.seq_len_q + 2 * self.seq_len_kv) * self.dim * 
+        return (self.batch * self.heads * (2 * self.seq_len_q + 2 * self.seq_len_kv) * self.dim *
                 self.dtype.itemsize)
 
     def gen_inputs(self):
@@ -48,4 +48,4 @@ class mha_decode_benchmark(Benchmark):
         with sdpa_kernel(backends=[SDPBackend.FLASH_ATTENTION]):
             output_bhsd = F.scaled_dot_product_attention(q_bhsd, k_bhsd, v_bhsd, is_causal=self.is_causal)
         output = output_bhsd.transpose(1, 2).contiguous()
-        return output 
+        return output

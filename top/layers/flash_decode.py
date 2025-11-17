@@ -21,7 +21,7 @@ class MHADecode(nn.Module):
 
     def forward(self, Q: torch.Tensor, K: torch.Tensor, V: torch.Tensor) -> torch.Tensor:
         return self.fn(Q, K, V)
-    
+
 
 class GQADecode(nn.Module):
 

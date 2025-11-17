@@ -42,7 +42,7 @@ class sparse_mla(Op):
             assert q_start_index_s > kv_stride, "If it is because each cp has too short length, "
             "you should fix the logic involving CP0 (cp_rank == 0), to make sure q with pos < KV_Stride - 1 is masked "
             "(or you may just ignore how this is handled if nan in these q's Out would not effect others, which is reported to be likely to happen by wangding)"
-        
+
         CP0 = q_start_index_s == 0
         self.q_start_index_s = q_start_index_s
 

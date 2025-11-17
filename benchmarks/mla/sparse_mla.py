@@ -57,7 +57,7 @@ class sparse_mla_decode_benchmark(Benchmark):
                             self.seq_len_kv))[:self.topk]
                     Indices[b, t, h, :len(i_i)] = i_i
         return Q, KV, Indices
-    
+
     def ref_program(self, Q: torch.Tensor, KV: torch.Tensor, Indices: torch.Tensor):
         q = Q.float()
         kv = KV.float()
@@ -99,4 +99,4 @@ class sparse_mla_decode_benchmark(Benchmark):
         o = torch.einsum("bghmn,bngd->bmghd", p.type(v.dtype), v)
         o = o.reshape(b, sq, h, dim_v)
         return o.to(torch.float16)
-    
+

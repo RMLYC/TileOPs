@@ -45,7 +45,7 @@
         printf "| %-50s | ❌ Fail  |\n" "$file_name" >> ../test_summary.txt
         failed_count=$((failed_count + 1))
       fi
-      
+
       echo "----------------------------------------" >> "$LOG_FILE"
     done
 

@@ -300,7 +300,7 @@ def _mha_decode_kernel(batch, heads, seqlen_q, seqlen_kv, dim, is_causal):
             V: T.Tensor(shape_kv, dtype),
             glse: T.Tensor([batch, heads, num_split, seqlen_q], dtype),
             Output_partial: T.Tensor(part_shape, dtype),  # [batch, seqlen_q, heads, num_split, dim]
-            Output: T.Tensor(shape_q, dtype),  
+            Output: T.Tensor(shape_q, dtype),
         ):
             _mha_decode_no_split(Q, K, V, Output)
 
@@ -330,14 +330,14 @@ def _mha_decode_wrapped_kernel(
     V: torch.Tensor,
     glse: torch.Tensor,
     Output_partial: torch.Tensor
-) -> torch.Tensor:  
+) -> torch.Tensor:
     return _mha_decode_kernel(batch, heads, seqlen_q, seqlen_kv, dim, is_causal)(
         block_M, block_N, num_split, num_stages, threads)(
             Q, K, V, glse, Output_partial)
 
 
 @_mha_decode_wrapped_kernel.register_fake
-def _(    
+def _(
     batch: int,
     heads: int,
     seqlen_q: int,

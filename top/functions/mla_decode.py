@@ -7,12 +7,12 @@ __all__ = ['mla_decode_fn']
 
 
 class mla_decode_ctx(torch.autograd.Function):
-    
+
     @staticmethod
     def forward(ctx, Q, Q_pe, K, K_pe, fwd_op):
         O = fwd_op(Q, Q_pe, K, K_pe)
         return O
-    
+
     @staticmethod
     def backward(ctx, dO):
         raise NotImplementedError("Backward pass is not implemented for mla_decode.")
@@ -40,6 +40,6 @@ class mla_decode_fn(Function):
 
         self.fwd_op = mla_decode(batch, heads, kv_head_num, seqlen_kv, dim, pe_dim, dtype, tune=tune)
 
-    
+
     def forward(self, Q: torch.Tensor, Q_pe: torch.Tensor, K: torch.Tensor, K_pe: torch.Tensor) -> torch.Tensor:
         return mla_decode_ctx.apply(Q, Q_pe, K, K_pe, self.fwd_op)

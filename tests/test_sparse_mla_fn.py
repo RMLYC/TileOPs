@@ -5,13 +5,13 @@ from top.utils import str2dtype
 from benchmarks import sparse_mla_decode_benchmark
 
 
-def test_sparse_mla_decode(B, H, S_q, S_kv, D, tail_dim, topk, kv_stride, 
+def test_sparse_mla_decode(B, H, S_q, S_kv, D, tail_dim, topk, kv_stride,
                            kv_group, q_start_index_s, sm_scale, dtype, tune=False):
-    fn = sparse_mla_fn(B, H, S_q, S_kv, D, tail_dim, topk, kv_stride, 
+    fn = sparse_mla_fn(B, H, S_q, S_kv, D, tail_dim, topk, kv_stride,
                     kv_group, q_start_index_s, sm_scale=sm_scale, dtype=dtype, tune=tune)
-    layer = SparseMLADecode(B, H, S_q, S_kv, D, tail_dim, topk, kv_stride, 
+    layer = SparseMLADecode(B, H, S_q, S_kv, D, tail_dim, topk, kv_stride,
                     kv_group, q_start_index_s, sm_scale=sm_scale, dtype=dtype, tune=tune)
-    benchmark = sparse_mla_decode_benchmark(B, H, S_q, S_kv, D, tail_dim, topk, kv_stride, 
+    benchmark = sparse_mla_decode_benchmark(B, H, S_q, S_kv, D, tail_dim, topk, kv_stride,
                                             kv_group, q_start_index_s, sm_scale=sm_scale, dtype=dtype)
 
     inputs = benchmark.gen_inputs()
@@ -23,7 +23,7 @@ def test_sparse_mla_decode(B, H, S_q, S_kv, D, tail_dim, topk, kv_stride,
     except Exception as e:
         print(f"❌ mla_fn test failed: {e}")
         raise
-    
+
     try:
         print("Testing mla_layer...")
         benchmark.check_fn(layer, *inputs, grad=False)

@@ -9,7 +9,7 @@ on:
 
 jobs:
   tileops_test_0-1-6-post1:
-    runs-on: [self-hosted, tile-ops] 
+    runs-on: [self-hosted, tile-ops]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -26,7 +26,7 @@ jobs:
           export PYTHONPATH="$(pwd):$PYTHONPATH"
           echo "PYTHONPATH=$PYTHONPATH"
           bash ci-test.sh tileops_test_0_1_6.log
-        shell: bash 
+        shell: bash
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -37,7 +37,7 @@ jobs:
           retention-days: 7  # 相当于 expire_in: 1 week
 
   tileops_test_nightly:
-    runs-on: [self-hosted, tile-ops] 
+    runs-on: [self-hosted, tile-ops]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -54,7 +54,7 @@ jobs:
           export PYTHONPATH="$(pwd):$PYTHONPATH"
           echo "PYTHONPATH=$PYTHONPATH"
           bash ci-test.sh tileops_test_nightly.log
-        shell: bash 
+        shell: bash
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -66,7 +66,7 @@ jobs:
 
   tileops_profile_nightly:
     needs: tileops_test_nightly
-    runs-on: [self-hosted, tile-ops] 
+    runs-on: [self-hosted, tile-ops]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -83,7 +83,7 @@ jobs:
           export PYTHONPATH="$(pwd):$PYTHONPATH"
           echo "PYTHONPATH=$PYTHONPATH"
           bash profile-run.sh --log profile_out/tileops_profile_nightly.log
-        shell: bash 
+        shell: bash
 
       - name: Upload profile_out artifacts
         uses: actions/upload-artifact@v4
@@ -92,4 +92,3 @@ jobs:
           name: profile_out
           path: profile_out/
           retention-days: 7
-

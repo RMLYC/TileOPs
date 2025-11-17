@@ -260,14 +260,14 @@ def _gqa_decode_wrapped_kernel(
     mask: torch.Tensor,
     glse: torch.Tensor,
     Output_partial: torch.Tensor
-) -> torch.Tensor:  
+) -> torch.Tensor:
     return _gqa_decode_kernel(batch, heads, groups, seqlen_kv, dim)(
         block_H, block_N, num_split, num_stages, threads)(
             Q, K, V, mask, glse, Output_partial)
 
 
 @_gqa_decode_wrapped_kernel.register_fake
-def _(    
+def _(
     batch: int,
     heads: int,
     groups: int,
@@ -350,4 +350,3 @@ class gqa_decode_kernel(Kernel):
             self.config["block_N"], self.config["num_stages"],
             self.config["threads"], self.config["num_split"],
             Q, K, V, mask, glse, Output_partial)
-

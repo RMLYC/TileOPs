@@ -22,7 +22,7 @@ class MLADecode(nn.Module):
     def forward(self, Q: torch.Tensor, Q_pe: torch.Tensor, K: torch.Tensor, K_pe: torch.Tensor) -> torch.Tensor:
         return self.fn(Q, Q_pe, K, K_pe)
 
-    
+
 class SparseMLADecode(nn.Module):
 
     def __init__(self,

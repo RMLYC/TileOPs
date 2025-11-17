@@ -26,4 +26,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     test_gqa_decode(args.batch, args.heads, args.groups, args.seq_len_kv, args.dim, str2dtype[args.dtype], args.tune)
-    
+

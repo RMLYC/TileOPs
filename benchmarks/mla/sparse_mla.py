@@ -40,7 +40,9 @@ class sparse_mla_decode_benchmark(Benchmark):
 
     @property
     def total_flops(self):
-        return self.batch * self.seq_len * (2 * self.dim + self.tail_dim) * self.topk * 2 * self.heads
+        return (
+            self.batch * self.seq_len * (2 * self.dim + self.tail_dim) * self.topk * 2 * self.heads
+        )
 
     @property
     def total_memory(self):

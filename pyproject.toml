@@ -74,7 +74,20 @@ skip = [
 
 [tools.flake8]
 max-line-length = 120
-extend-ignore = E203, W503, VNE001, D101, D102, D107  # 常见 black 推荐的组合
+extend-ignore = [
+  "E203",
+  "W503",
+  "VNE001",
+  "VNE002",
+  "U100",
+  "D",
+  "R504",
+  "E741",
+  "E501",
+]
+
+[tool.mypy]
+ignore_missing_imports = true
 
 [tool.ruff.lint]
 select = [

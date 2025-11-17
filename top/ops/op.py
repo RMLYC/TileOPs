@@ -37,7 +37,7 @@ class Op(ABC):
     """
 
     kernel: Kernel
-    kernel_map: dict[str, Kernel] | None = {}
+    kernel_map: dict[str, Kernel] = {}
     dtype: torch.dtype | None = None
     device: torch.device | str | None = "cuda"
     input_shapes: list[tuple] | None = None

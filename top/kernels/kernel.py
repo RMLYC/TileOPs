@@ -8,7 +8,6 @@ from tilelang.autotuner import autotune
 class Kernel(ABC):
     dtype: torch.dtype | None = None
     config: dict
-    autotune_configs: list[dict] | None = None
     supported_archs: list[int] | None = None
     kernel: Callable[[dict], Callable]
 
@@ -41,6 +40,10 @@ class Kernel(ABC):
     @property
     def default_config(self) -> dict:
         """Return the default config for the kernel."""
+        return {}
+
+    @property
+    def autotune_configs(self) -> list[dict]:
         return {}
 
     @abstractmethod

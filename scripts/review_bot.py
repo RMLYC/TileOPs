@@ -18,7 +18,7 @@ def debug_models():
 
 # 在代码开始处调用
 debug_models()
-model = genai.GenerativeModel('gemini-1.5-flash')
+model = genai.GenerativeModel('gemini-3-flash-preview')
 
 # 1. 配置 API Key
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")

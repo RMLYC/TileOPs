@@ -14,7 +14,7 @@ class gqa_decode_ctx(torch.autograd.Function):
 
     @staticmethod
     def backward(ctx, dO):
-        raise NotImplementedError("Backward pass is not implemented for gqa_decode.")
+        raise NotImplementedError("Backward pass is not implemented for gqa_decode xxx.")
 
 
 class GroupQueryAttentionDecodeWithKVCacheFunc(Function):

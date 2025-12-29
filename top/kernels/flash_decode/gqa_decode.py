@@ -8,9 +8,8 @@ import itertools
 __all__ = ["gqa_decode_kernel"]
 
 
-def _gqa_decode_kernel(batch, heads, groups, seqlen_kv, dim):
+def _gqa_decode_kernel(batch, heads, groups, seqlen_kv, dim, dtype='float16'):
     scale = (1.0 / dim)**0.5 * 1.44269504  # log2(e)
-    dtype = "float16"
     accum_dtype = "float"
 
     @tilelang.jit(
@@ -289,7 +288,7 @@ class gqa_decode_kernel(Kernel):
                  groups,
                  seqlen_kv,
                  dim,
-                 dtype="float16",
+                 dtype,
                  config: Optional[dict] = None,
                  tune=False):
         super().__init__()
@@ -301,7 +300,7 @@ class gqa_decode_kernel(Kernel):
         self.dtype = dtype
 
         self.kernel = _gqa_decode_kernel(self.batch, self.heads, self.groups, self.seqlen_kv,
-                                         self.dim)
+                                         self.dim, self.dtype_str)
 
         self.init_config(config, tune)
 

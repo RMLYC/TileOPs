@@ -1,0 +1,34 @@
+name: Gemini Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize] # 当 PR 创建或有新提交时触发
+
+permissions:
+  contents: read
+  pull-requests: write # 需要写权限来发布评论
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Equivalent to GIT_STRATEGY: fetch
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install google-generativeai PyGithub
+
+      - name: Run Gemini Review Bot
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub 自动提供的 Token
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: python scripts/review_bot.py

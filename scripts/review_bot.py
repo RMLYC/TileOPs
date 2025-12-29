@@ -2,6 +2,24 @@ import os
 import google.generativeai as genai
 from github import Github
 
+# 在 review_bot.py 顶部引入
+
+
+# 在 main() 或初始化 model 之前加入
+def debug_models():
+    print("正在列出可用模型...")
+    try:
+        for m in genai.list_models():
+            if 'generateContent' in m.supported_generation_methods:
+                print(m.name)
+    except Exception as e:
+        print(f"列出模型失败: {e}")
+
+
+# 在代码开始处调用
+debug_models()
+model = genai.GenerativeModel('gemini-1.5-flash')
+
 # 1. 配置 API Key
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")

@@ -29,12 +29,4 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub 自动提供的 Token
           PR_NUMBER: ${{ github.event.pull_request.number }}
-        run: |
-          source ~/.bashrc
-          export PATH=/usr/local/cuda-12.9/bin:$PATH
-          export LD_LIBRARY_PATH=/usr/local/cuda-12.9/lib64:$LD_LIBRARY_PATH
-          source /home/lyc/miniconda3/etc/profile.d/conda.sh
-          conda activate tileops-dev
-          export PYTHONPATH="$(pwd):$PYTHONPATH"
-          echo "PYTHONPATH=$PYTHONPATH"
-          python scripts/review_bot.py
+        run: python scripts/review_bot.py

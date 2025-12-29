@@ -18,7 +18,7 @@ def debug_models():
 
 # 在代码开始处调用
 debug_models()
-model = genai.GenerativeModel('gemini-2.5-flash')
+model = genai.GenerativeModel('gemini-2.0-flash-exp')
 
 # 1. 配置 API Key
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
@@ -31,7 +31,7 @@ genai.configure(api_key=GEMINI_API_KEY)
 # 2. 初始化 Gemini 模型
 # 使用 flash 模型速度快且便宜，适合简单 Review
 # 如果代码量极大，建议使用 gemini-1.5-pro
-model = genai.GenerativeModel('gemini-2.5-flash')
+model = genai.GenerativeModel('gemini-2.0-flash-exp')
 
 
 def get_pr_diff():

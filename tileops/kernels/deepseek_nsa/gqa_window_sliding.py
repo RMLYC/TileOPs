@@ -266,13 +266,12 @@ class GQAWindowSlidingKernel(Kernel):
         self.window_size_right = window_size_right
         self.dtype = dtype
         self.accum_dtype = accum_dtype
-        self.dtype_name = str(dtype).split('.')[-1]
-        self.accum_dtype_name = str(accum_dtype).split('.')[-1]
+        self.accum_dtype_str = self.dtype_to_str(self.accum_dtype)
 
         self.kernel = _gqa_window_sliding_kernel(self.batch_size, self.groups, self.uq, self.ukv,
                                                  self.heads, self.dim, self.is_causal,
                                                  self.window_size_left, self.window_size_right,
-                                                 self.dtype_name, self.accum_dtype_name)
+                                                 self.dtype_str, self.accum_dtype_str)
         self.init_config(config, tune)
 
     @property
@@ -302,6 +301,6 @@ class GQAWindowSlidingKernel(Kernel):
                 cu_seqlens_k: torch.Tensor, max_seqlen_q: int) -> torch.Tensor:
         return _gqa_window_sliding_wrapped_kernel(
             self.batch_size, self.groups, self.uq, self.ukv, self.heads, self.dim, self.is_causal,
-            self.window_size_left, self.window_size_right, self.dtype_name, self.accum_dtype_name,
+            self.window_size_left, self.window_size_right, self.dtype_str, self.accum_dtype_str,
             self.config["block_m"], self.config["block_n"], self.config["num_stages"],
             self.config["threads"], q, k, v, cu_seqlens_q, cu_seqlens_k, max_seqlen_q)

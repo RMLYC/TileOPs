@@ -17,7 +17,7 @@ class ManifoldConstrainedHyperConnectionPostOp(Op):
                  batch,
                  n_expand,
                  c_x,
-                 dtype: str = 'float32',
+                 dtype: torch.dtype = torch.float32,
                  kernel_map: Optional[Dict[str, Kernel]] = None,
                  tune: bool = False) -> None:
         self.batch = batch

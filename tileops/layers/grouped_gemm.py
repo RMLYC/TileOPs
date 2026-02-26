@@ -6,7 +6,7 @@ from tileops.functions import GroupedGemmFunc
 
 class GroupedGemmLayer(nn.Module):
 
-    def __init__(self, batch_sum: int, batch_count: int, n: int, k: int, dtype: str):
+    def __init__(self, batch_sum: int, batch_count: int, n: int, k: int, dtype: torch.dtype):
         super().__init__()
         self.batch_sum = batch_sum
         self.batch_count = batch_count

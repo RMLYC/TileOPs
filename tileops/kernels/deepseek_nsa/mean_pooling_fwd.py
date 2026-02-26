@@ -157,12 +157,11 @@ class MeanPoolingFwdKernel(Kernel):
         self.use_offsets = use_offsets
         self.dtype = dtype
         self.accum_dtype = accum_dtype
-        self.dtype_name = str(dtype).split('.')[-1]
-        self.accum_dtype_name = str(accum_dtype).split('.')[-1]
+        self.accum_dtype_str = self.dtype_to_str(self.accum_dtype)
 
         self.kernel = _mean_pooling_kernel(self.batch_size, self.seq_len, self.heads, self.dim,
                                            self.chunk_size, self.chunks_per_bacth, self.seq_num,
-                                           self.use_offsets, self.dtype_name, self.accum_dtype_name)
+                                           self.use_offsets, self.dtype_str, self.accum_dtype_str)
 
         self.init_config(config, tune)
 
@@ -183,6 +182,6 @@ class MeanPoolingFwdKernel(Kernel):
                 indices: torch.Tensor) -> torch.Tensor:
         return _mean_pooling_wrapped_kernel(self.batch_size, self.seq_len, self.heads, self.dim,
                                             self.chunk_size, self.chunks_per_bacth, self.seq_num,
-                                            self.use_offsets, self.dtype_name,
-                                            self.accum_dtype_name, self.config["bdim"],
+                                            self.use_offsets, self.dtype_str, self.accum_dtype_str,
+                                            self.config["bdim"],
                                             self.config["threads"], x, offsets, indices)

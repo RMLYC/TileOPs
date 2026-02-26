@@ -290,7 +290,7 @@ class mhc_pre_kernel(Kernel):
                  batch,
                  n_expand,
                  c_x,
-                 dtype: str = 'float32',
+                 dtype: torch.dtype = torch.float32,
                  config: Optional[dict] = None,
                  tune=False):
         super().__init__()

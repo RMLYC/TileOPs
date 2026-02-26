@@ -292,8 +292,9 @@ class NSATopkVarlenKernel(Kernel):
         self.bc = bc
         self.bs = bs
         self.bk = bk
-        self.dtype_name = str(dtype).split('.')[-1]
-        self.accum_dtype_name = str(accum_dtype).split('.')[-1]
+        self.dtype = dtype
+        self.accum_dtype = accum_dtype
+        self.accum_dtype_str = self.dtype_to_str(self.accum_dtype)
         self.init_config(config, tune)
 
     @property
@@ -313,11 +314,11 @@ class NSATopkVarlenKernel(Kernel):
         return _nsa_topk_varlen_wrapped_kernel(self.seq_num, self.c_seq_len, self.heads, self.dim,
                                                self.chunk_num, self.group, self.scale,
                                                self.selected_block_num, self.bc, self.bs, self.bk,
-                                               self.dtype_name, self.accum_dtype_name,
+                                               self.dtype_str, self.accum_dtype_str,
                                                self.config["threads"],
-                                               q.to(getattr(torch, self.dtype_name)),
-                                               k_cmp.to(getattr(torch, self.dtype_name)),
-                                               lse_in.to(getattr(torch, self.dtype_name)),
+                                               q.to(self.dtype),
+                                               k_cmp.to(self.dtype),
+                                               lse_in.to(self.dtype),
                                                offsets.to(torch.int32),
                                                chunk_offsets.to(torch.int32),
                                                token_indices.to(torch.int32))

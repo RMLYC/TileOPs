@@ -37,6 +37,11 @@ class Kernel(ABC):
         """Convert dtype to str for tl kernels"""
         return str(self.dtype).split('.')[-1]
 
+    @staticmethod
+    def dtype_to_str(dtype: torch.dtype) -> str:
+        """Convert a torch dtype to the TileLang dtype string."""
+        return str(dtype).split('.')[-1]
+
     @property
     def default_config(self) -> Dict[str, Any]:
         """Return the default config for the kernel"""

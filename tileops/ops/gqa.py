@@ -41,12 +41,12 @@ class GroupQueryAttentionFwdOp(Op):
         self.dtype = dtype
 
         self.dispatch_kernel(kernel_map)
-        self.kernel = self.kernel_map["GqaFwdKernel"](
+        self.kernel = self.kernel_map["gqa_fwd_kernel"](
             batch, heads, heads_kv, seq_len, dim, is_causal, self.dtype, tune=tune)
 
     @property
     def default_kernel_map(self) -> Dict[str, Kernel]:
-        return {"GqaFwdKernel": GqaFwdWgmmaPipelinedKernel if is_hopper() else GqaFwdKernel}
+        return {"gqa_fwd_kernel": GqaFwdWgmmaPipelinedKernel if is_hopper() else GqaFwdKernel}
 
     def forward(self, q: torch.Tensor, k: torch.Tensor, v: torch.Tensor) -> torch.Tensor:
         return self.kernel(q, k, v)
@@ -77,7 +77,7 @@ class GroupQueryAttentionBwdOp(Op):
         self.dispatch_kernel(kernel_map)
         self.prep_kernel = self.kernel_map["gqa_bwd_preprocess_kernel"](batch, heads, seq_len, dim,
                                                                         self.dtype)
-        self.kernel = self.kernel_map["GqaBwdKernel"](
+        self.kernel = self.kernel_map["gqa_bwd_kernel"](
             batch, heads, heads_kv, seq_len, dim, is_causal, self.dtype, tune=tune)
         if not is_hopper():
             self.post_kernel = self.kernel_map["gqa_bwd_postprocess_kernel"](batch, heads, seq_len,
@@ -88,7 +88,7 @@ class GroupQueryAttentionBwdOp(Op):
         return {
             "gqa_bwd_preprocess_kernel":
                 FlashAttnBwdPreprocessKernel,
-            "GqaBwdKernel":
+            "gqa_bwd_kernel":
                 GqaBwdWgmmaPipelinedKernel if is_hopper() else GqaBwdKernel,
             "gqa_bwd_postprocess_kernel":
                 FlashAttnBwdPostprocessKernel if not is_hopper() else None,

@@ -255,6 +255,5 @@ class NSAFwdVarlenKernel(Kernel):
         return _nsa_fwd_varlen_wrapped_kernel(self.batch, self.heads, self.c_seq_len, self.dim,
                                               self.is_causal, self.scale, self.block_size,
                                               self.groups, self.selected_blocks, self.dtype_str,
-                                              self.accum_dtype_str, self.config["threads"], q, k,
-                                              v, block_indices, block_counts, offsets,
-                                              token_indices)
+                                              self.accum_dtype_str, self.config["threads"], q, k, v,
+                                              block_indices, block_counts, offsets, token_indices)

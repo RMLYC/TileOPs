@@ -260,10 +260,8 @@ class NSACmpFwdVarlenKernel(Kernel):
                                                   self.dim_k, self.dim_v, self.chunk_num,
                                                   self.group, self.scale, self.bc, self.bs, self.bk,
                                                   self.bv, self.dtype_str, self.accum_dtype_str,
-                                                  self.config["threads"],
-                                                  q.to(self.dtype),
-                                                  k_cmp.to(self.dtype),
-                                                  v_cmp.to(self.dtype),
+                                                  self.config["threads"], q.to(self.dtype),
+                                                  k_cmp.to(self.dtype), v_cmp.to(self.dtype),
                                                   offsets.to(torch.int32),
                                                   chunk_offsets.to(torch.int32),
                                                   token_indices.to(torch.int32))

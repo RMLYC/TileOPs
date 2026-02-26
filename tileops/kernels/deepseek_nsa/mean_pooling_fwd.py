@@ -183,5 +183,5 @@ class MeanPoolingFwdKernel(Kernel):
         return _mean_pooling_wrapped_kernel(self.batch_size, self.seq_len, self.heads, self.dim,
                                             self.chunk_size, self.chunks_per_bacth, self.seq_num,
                                             self.use_offsets, self.dtype_str, self.accum_dtype_str,
-                                            self.config["bdim"],
-                                            self.config["threads"], x, offsets, indices)
+                                            self.config["bdim"], self.config["threads"], x, offsets,
+                                            indices)

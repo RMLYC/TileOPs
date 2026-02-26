@@ -52,8 +52,8 @@ def _fp8_quant_kernel(seq_len_kv, index_dim, in_dtype: str):
 
 
 @torch.library.custom_op("top::fp8_quant_wrapped_kernel", mutates_args=())
-def _fp8_quant_wrapped_kernel(seq_len_kv: int, index_dim: int, in_dtype: str,
-                              num_stages: int, block_m: int,
+def _fp8_quant_wrapped_kernel(seq_len_kv: int, index_dim: int, in_dtype: str, num_stages: int,
+                              block_m: int,
                               input_tensor: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
     return _fp8_quant_kernel(seq_len_kv, index_dim, in_dtype)(num_stages, block_m)(input_tensor)
 

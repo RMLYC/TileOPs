@@ -230,8 +230,9 @@ class NSAFwdVarlenKernel(Kernel):
         self.block_size = block_size
         self.groups = groups
         self.selected_blocks = selected_blocks
-        self.dtype_name = str(dtype).split('.')[-1]
-        self.accum_dtype_name = str(accum_dtype).split('.')[-1]
+        self.dtype = dtype
+        self.accum_dtype = accum_dtype
+        self.accum_dtype_str = self.dtype_to_str(self.accum_dtype)
 
         self.init_config(config, tune)
 
@@ -253,7 +254,6 @@ class NSAFwdVarlenKernel(Kernel):
                 token_indices: torch.Tensor) -> torch.Tensor:
         return _nsa_fwd_varlen_wrapped_kernel(self.batch, self.heads, self.c_seq_len, self.dim,
                                               self.is_causal, self.scale, self.block_size,
-                                              self.groups, self.selected_blocks, self.dtype_name,
-                                              self.accum_dtype_name, self.config["threads"], q, k,
-                                              v, block_indices, block_counts, offsets,
-                                              token_indices)
+                                              self.groups, self.selected_blocks, self.dtype_str,
+                                              self.accum_dtype_str, self.config["threads"], q, k, v,
+                                              block_indices, block_counts, offsets, token_indices)

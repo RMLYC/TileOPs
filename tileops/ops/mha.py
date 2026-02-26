@@ -39,12 +39,12 @@ class MultiHeadAttentionFwdOp(Op):
         self.dtype = dtype
 
         self.dispatch_kernel(kernel_map)
-        self.kernel = self.kernel_map["MhaFwdKernel"](
+        self.kernel = self.kernel_map["mha_fwd_kernel"](
             batch, heads, seq_len, dim, is_causal, self.dtype, tune=tune)
 
     @property
     def default_kernel_map(self) -> Dict[str, Kernel]:
-        return {"MhaFwdKernel": MhaFwdWgmmaPipelinedKernel if is_hopper() else MhaFwdKernel}
+        return {"mha_fwd_kernel": MhaFwdWgmmaPipelinedKernel if is_hopper() else MhaFwdKernel}
 
     def forward(self, q: torch.Tensor, k: torch.Tensor, v: torch.Tensor) -> torch.Tensor:
         return self.kernel(q, k, v)
@@ -73,7 +73,7 @@ class MultiHeadAttentionBwdOp(Op):
         self.dispatch_kernel(kernel_map)
         self.prep_kernel = self.kernel_map["mha_bwd_preprocess_kernel"](batch, heads, seq_len, dim,
                                                                         self.dtype)
-        self.kernel = self.kernel_map["MhaBwdKernel"](
+        self.kernel = self.kernel_map["mha_bwd_kernel"](
             batch, heads, seq_len, dim, is_causal, self.dtype, tune=tune)
         if not is_hopper():
             self.post_kernel = self.kernel_map["mha_bwd_postprocess_kernel"](batch, heads, seq_len,
@@ -84,7 +84,7 @@ class MultiHeadAttentionBwdOp(Op):
         return {
             "mha_bwd_preprocess_kernel":
                 FlashAttnBwdPreprocessKernel,
-            "MhaBwdKernel":
+            "mha_bwd_kernel":
                 MhaBwdWgmmaPipelinedKernel if is_hopper() else MhaBwdKernel,
             "mha_bwd_postprocess_kernel":
                 FlashAttnBwdPostprocessKernel if not is_hopper() else None,

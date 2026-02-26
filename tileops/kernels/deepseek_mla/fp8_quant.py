@@ -10,7 +10,7 @@ from tileops.kernels.kernel import Kernel
 __all__ = ["Fp8QuantKernel"]
 
 
-def _fp8_quant_kernel(seq_len_kv, index_dim, in_dtype):
+def _fp8_quant_kernel(seq_len_kv, index_dim, in_dtype: str):
 
     @tilelang.jit(out_idx=[1, 2])
     def _fp8_quant_fwd_func(num_stages, block_m):
@@ -52,8 +52,8 @@ def _fp8_quant_kernel(seq_len_kv, index_dim, in_dtype):
 
 
 @torch.library.custom_op("top::fp8_quant_wrapped_kernel", mutates_args=())
-def _fp8_quant_wrapped_kernel(seq_len_kv: int, index_dim: int, in_dtype: torch.dtype,
-                              num_stages: int, block_m: int,
+def _fp8_quant_wrapped_kernel(seq_len_kv: int, index_dim: int, in_dtype: str, num_stages: int,
+                              block_m: int,
                               input_tensor: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
     return _fp8_quant_kernel(seq_len_kv, index_dim, in_dtype)(num_stages, block_m)(input_tensor)
 
@@ -79,9 +79,9 @@ class Fp8QuantKernel(Kernel):
         super().__init__()
         self.seq_len_kv = seq_len_kv
         self.index_dim = index_dim
-        self.in_dtype = in_dtype
+        self.dtype = in_dtype
         self.config = config or {}
-        self.kernel = _fp8_quant_kernel(self.seq_len_kv, self.index_dim, self.in_dtype)
+        self.kernel = _fp8_quant_kernel(self.seq_len_kv, self.index_dim, self.dtype_str)
         self.init_config(config, tune)
 
     @property
@@ -97,6 +97,6 @@ class Fp8QuantKernel(Kernel):
         return [{'num_stages': c[0], 'block_m': c[1]} for c in _configs]
 
     def forward(self, input_tensor: torch.Tensor):
-        return _fp8_quant_wrapped_kernel(self.seq_len_kv, self.index_dim, self.in_dtype,
+        return _fp8_quant_wrapped_kernel(self.seq_len_kv, self.index_dim, self.dtype_str,
                                          self.config["num_stages"], self.config["block_m"],
                                          input_tensor)

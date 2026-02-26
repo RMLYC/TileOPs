@@ -29,8 +29,8 @@ class TopkSelectorFunc(Function):
                  batch: int,
                  seq_len: int,
                  topk: int,
-                 in_dtype: str,
-                 out_dtype: str,
+                 in_dtype: torch.dtype,
+                 out_dtype: torch.dtype,
                  tune: bool = False):
 
         self.batch = batch

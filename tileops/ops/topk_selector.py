@@ -16,8 +16,8 @@ class TopkSelectorOp(Op):
                  batch: int,
                  seq_len: int,
                  topk: int,
-                 in_dtype: str,
-                 out_dtype: str,
+                 in_dtype: torch.dtype,
+                 out_dtype: torch.dtype,
                  kernel_map: Optional[Dict[str, Kernel]] = None,
                  tune: bool = False) -> None:
         self.batch = batch
@@ -27,12 +27,12 @@ class TopkSelectorOp(Op):
         self.out_dtype = out_dtype
 
         self.dispatch_kernel(kernel_map)
-        self.kernel = self.kernel_map["TopkSelectorKernel"](
+        self.kernel = self.kernel_map["topk_selector_kernel"](
             self.batch, self.seq_len, self.topk, self.in_dtype, self.out_dtype, tune=tune)
 
     @property
     def default_kernel_map(self) -> Dict[str, Kernel]:
-        return {"TopkSelectorKernel": TopkSelectorKernel}
+        return {"topk_selector_kernel": TopkSelectorKernel}
 
     def forward(self, index_score, starts, ends) -> torch.Tensor:
 

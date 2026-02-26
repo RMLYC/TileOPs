@@ -80,7 +80,7 @@ class DeepSeekSparseAttentionDecodeWithKVCacheOp(Op):
         self.q_start_index_s = q_start_index_s
 
         self.dispatch_kernel(kernel_map)
-        self.kernel = self.kernel_map["SparseMlaKernel"](
+        self.kernel = self.kernel_map["sparse_mla_kernel"](
             self.batch,
             self.seq_len,
             self.seq_len_kv,
@@ -104,9 +104,9 @@ class DeepSeekSparseAttentionDecodeWithKVCacheOp(Op):
 
         Returns:
             Dict[str, Kernel]: A dictionary mapping kernel names to kernel functions.
-            The default map includes the "SparseMlaKernel".
+            The default map includes the "sparse_mla_kernel".
         """
-        return {"SparseMlaKernel": SparseMlaKernel}
+        return {"sparse_mla_kernel": SparseMlaKernel}
 
     def forward(self, q: torch.Tensor, kv: torch.Tensor, indices: torch.Tensor) -> torch.Tensor:
         """

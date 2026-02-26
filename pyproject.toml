@@ -16,7 +16,7 @@ dependencies = [
     "einops>=0.6.0",
     # FIXME(ying): Relax this requirement: higher versions require CUDA 13.0,
     #which has not been fully tested for tileops.
-    "tilelang==0.1.7.post1",
+    "tilelang==0.1.8",
 ]
 requires-python = ">=3.8"
 license = {text = "MIT"}

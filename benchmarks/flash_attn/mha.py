@@ -242,6 +242,8 @@ class MultiHeadAttentionBenchmark(Benchmark):
         return q, k, v
 
     def ref_program(self, q: torch.Tensor, k: torch.Tensor, v: torch.Tensor) -> None:
+
+        ### Reference program
         q_bhsd = q.transpose(1, 2)  # [B, H, S, D]
         k_bhsd = k.transpose(1, 2)
         v_bhsd = v.transpose(1, 2)

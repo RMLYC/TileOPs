@@ -16,7 +16,6 @@ __all__ = [
 
 
 # flake8: noqa
-# yapf: disable
 def _grouped_gemm_nt_kernel(batch_sum, batch_count, N, K, dtype='float16'):
     accum_dtype = "float"
 
@@ -495,4 +494,3 @@ class grouped_gemm_tt_kernel(Kernel):
                                                          self.config["num_stages"],
                                                          self.config["threads"])
         return kernel(a, b, batch_sizes, batch_offsets, batch_padded_offsets)
-# yapf: enable

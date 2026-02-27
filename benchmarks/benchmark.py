@@ -57,7 +57,7 @@ class Benchmark(ABC):
             raise ValueError(f"Unsupported output type: {type(outputs)}")
 
         assert len(outputs) == len(outputs_ref), "outputs and outputs_ref have different size"
-        for i, (output, output_ref) in enumerate(zip(outputs, outputs_ref)):
+        for i, (output, output_ref) in enumerate(zip(outputs, outputs_ref, strict=True)):
             if output_ref is not None:  # skip checking for None placeholders in ref
                 max_err = (output - output_ref).abs().max()
                 assert torch.allclose(output, output_ref, atol=atol, rtol=rtol), \
@@ -106,7 +106,7 @@ class Benchmark(ABC):
 
         assert len(outputs) == len(outputs_ref), \
             f"outputs: {len(outputs)} and outputs_ref: {len(outputs_ref)} have different size"
-        for i, (output, output_ref) in enumerate(zip(outputs, outputs_ref)):
+        for i, (output, output_ref) in enumerate(zip(outputs, outputs_ref, strict=True)):
             if output_ref is not None:  # skip checking for None placeholders in ref
                 max_err = (output - output_ref).abs().max()
                 assert torch.allclose(output, output_ref, atol=atol, rtol=rtol), \

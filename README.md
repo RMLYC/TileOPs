@@ -59,9 +59,9 @@ TODO
 
 ### Requirements
 
-- Python >= 3.8
+- Python >= 3.10
 - Torch >= 2.1
-- [TileLang](https://github.com/tile-ai/tilelang) >= 0.1.7
+- [TileLang](https://github.com/tile-ai/tilelang) >= 0.1.8
 
 ### Method 1: Install from PyPI
 

@@ -82,7 +82,7 @@ class TopkSelectorBenchmark(Benchmark):
 
         assert len(outputs) == len(outputs_ref), \
             f"outputs: {len(outputs)} and outputs_ref: {len(outputs_ref)} have different size"
-        for i, (_output, _output_ref) in enumerate(zip(outputs, outputs_ref)):
+        for i, (_output, _output_ref) in enumerate(zip(outputs, outputs_ref, strict=True)):
             ref_np = outputs_ref[i].cpu().to(torch.int32).numpy()
             trt_np = outputs[i].cpu().to(torch.int32).numpy()
 

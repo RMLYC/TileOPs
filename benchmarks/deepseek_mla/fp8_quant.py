@@ -75,7 +75,7 @@ class Fp8QuantBenchmark(Benchmark):
             raise ValueError(f"Unsupported output type: {type(outputs)}")
 
         assert len(outputs) == len(outputs_ref), "outputs and outputs_ref have different size"
-        for i, (output, output_ref) in enumerate(zip(outputs, outputs_ref)):
+        for i, (output, output_ref) in enumerate(zip(outputs, outputs_ref, strict=True)):
             if output_ref is not None:
                 output = output.to(torch.float32)
                 output_ref = output_ref.to(torch.float32)

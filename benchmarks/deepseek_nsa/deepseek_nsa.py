@@ -453,7 +453,7 @@ class NSATopkVarlenBenchmark(Benchmark):
         if isinstance(outputs, torch.Tensor):
             outputs = (outputs,)
 
-        for out, ref in zip(outputs, outputs_ref):
+        for out, ref in zip(outputs, outputs_ref, strict=True):
             print("[Top-K Indices Comparison - TileLang vs PyTorch]")
 
             indices_match_tl_torch = torch.all(out == ref)

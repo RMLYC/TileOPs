@@ -81,9 +81,7 @@ We enforce high standards for code quality and consistency.
 
 - **Style Guide**: **[Google Python Style Guide](https://google.github.io/styleguide/pyguide.html)**.
   - We strictly follow the Google style for formatting and docstrings.
-- **Formatter**: `yapf`
-  - Configuration: `based_on_style = "google"` in `pyproject.toml`.
-- **Linter**: `ruff`
+- **Formatter/Linter**: `ruff`
 - **Docstrings**: All public functions and classes must use **Google-style docstrings**.
 
 ### Improvements & Type Safety

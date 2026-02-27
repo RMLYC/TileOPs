@@ -2,15 +2,10 @@ name: CI
 
 on:
   push:
-    branches: ['**']  # All branches
-    tags:     ['**']  # All tags push will also trigger, can be removed as needed
+    branches: [main]
   pull_request:
-    branches: ['**']  # All branch PRs trigger CI
-  schedule:
-    # Run daily at 00:00 Beijing Time (which is 16:00 UTC)
-    - cron: '0 16 * * *'
-  workflow_dispatch:
-    # Allow manual triggering of the workflow
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
 
 concurrency:
   # Keep only the newest run for the same PR or branch ref.
@@ -19,6 +14,7 @@ concurrency:
 
 jobs:
   pre-commit:
+    if: ${{ github.repository == 'tile-ai/TileOPs' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -43,6 +39,7 @@ jobs:
           extra_args: --all-files --show-diff-on-failure
 
   packaging:
+    if: ${{ github.repository == 'tile-ai/TileOPs' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -62,6 +59,7 @@ jobs:
 
   tileops_test_release:
     # needs: pre-commit
+    if: ${{ github.repository == 'tile-ai/TileOPs' }}
     runs-on: [self-hosted, tile-ops, venv]
     steps:
       - name: Checkout code
@@ -118,9 +116,8 @@ jobs:
 
   tileops_test_nightly:
     # needs: pre-commit
+    if: ${{ github.repository == 'tile-ai/TileOPs' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
     runs-on: [self-hosted, tile-ops, venv]
-    # Only run this job when the event is schedule or workflow_dispatch
-    if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3

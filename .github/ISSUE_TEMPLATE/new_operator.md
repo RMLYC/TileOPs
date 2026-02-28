@@ -28,17 +28,7 @@ assignees: ''
   - [ ] TFLOPS
   - [ ] DRAM Bandwidth
 
-### 3. Functional API (L3)
-
-- [ ] **Autograd**: Implement `torch.autograd.Function` in `tileops/functions/<op_name>.py`
-- [ ] **GradCheck**: Pass `torch.autograd.gradcheck`
-
-### 4. Layer Wrapper (L4)
-
-- [ ] **Module**: Implement `nn.Module` in `tileops/layers/<op_name>.py`
-- [ ] **Type Hints**: Complete type hints (strict mode checked)
-
-### 5. Benchmark Results
+### 3. Benchmark Results
 
 <!-- Please report the benchmark results in the table below -->
 

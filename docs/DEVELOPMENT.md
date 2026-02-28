@@ -4,26 +4,24 @@ This document outlines the software engineering standards, architecture, and dev
 
 ## 1. Architecture Overview
 
-TileOPs follows a strict **4-Layer Hierarchical Architecture**. This separation of concerns ensures that hardware-specific optimizations (Kernels) are decoupled from user-facing APIs (Layers).
+TileOPs follows a strict **2-Layer Hierarchical Architecture**. This separation of concerns ensures that hardware-specific optimizations (Kernels) are decoupled from user-facing APIs (Ops).
 
-| Layer  |     Name     |        Analog         | Description                                                                                                                                                   |
-| :----: | :----------: | :-------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **L4** |  **Layer**   |   `torch.nn.Module`   | **User Interface**: Manages state (weights), input validation, and provides a Pythonic API.                                                                   |
-| **L3** | **Function** | `torch.nn.functional` | **Function API**: Stateless, autograd-compatible. Handles forward/backward passes via `torch.autograd.Function`.                                              |
-| **L2** |    **Op**    |      `torch.ops`      | **Stateless Dispatcher**: Hardware-agnostic entry point. Dispatches to specific kernels. **No Autograd**. Compatible with **CUDA-Graph** & **torch.compile**. |
-| **L1** |  **Kernel**  |       TileLang        | **Implementation**: Raw TileLang kernels optimized for specific hardware (e.g., Hopper, Ampere).                                                              |
+| Layer  |    Name    |   Analog    | Description                                                                                                                                  |
+| :----: | :--------: | :---------: | :------------------------------------------------------------------------------------------------------------------------------------------- |
+| **L2** |   **Op**   | `torch.ops` | **Stateless Dispatcher**: Hardware-agnostic entry point. Dispatches to specific kernels. Compatible with **CUDA-Graph** & **torch.compile**. |
+| **L1** | **Kernel** |  TileLang   | **Implementation**: Raw TileLang kernels optimized for specific hardware (e.g., Hopper, Ampere).                                             |
 
 ______________________________________________________________________
 
 ## 2. Development Workflow
 
-Developing a new operator involves a bottom-up approach, moving from Kernel implementation to Layer abstraction.
+Developing a new operator involves a bottom-up approach, moving from Kernel implementation to Op abstraction.
 
 ### Step 0: Create Tracking Issue
 
 - **Action**: Create a new issue using the **"New Operator Request"** template.
-- **Goal**: Define scope and track progress across the 4 layers.
-- **Task Decomposition**: For new operators, **break down the checklist items into detailed sub-issues** (i.e., **Kernel Implementation**, **Op Implementation**, **Function Implementation**, **Layer Implementation**, **Benchmark Results**). This allows new contributors to pick up smaller, well-defined tasks and submit smaller PRs.
+- **Goal**: Define scope and track progress across the 2 layers.
+- **Task Decomposition**: For new operators, **break down the checklist items into detailed sub-issues** (i.e., **Kernel Implementation**, **Op Implementation**, **Benchmark Results**). This allows new contributors to pick up smaller, well-defined tasks and submit smaller PRs.
 - **Definition of Done**: The issue is closed when the operator is fully implemented and verified.
 
 ### Step 1: Kernel Implementation (L1)
@@ -48,24 +46,7 @@ Developing a new operator involves a bottom-up approach, moving from Kernel impl
   - Benchmark results must be reproducible.
 - **Definition of Done**: The op is verified in unit tests, and benchmarks run correctly.
 
-### Step 3: Functional API (L3)
-
-- **Location**: `tileops/functions/{operator_name}.py`
-- **Responsibilities**:
-  - Implement `torch.autograd.Function`.
-  - Define `forward()` and `backward()` static methods.
-  - **Docstrings**: Google Style (Args, Returns, Gradients).
-- **Verification**: Pass `torch.autograd.gradcheck` for ops with backward().
-- **Definition of Done**: The op is verified in unit tests.
-
-### Step 4: Layer Wrapper (L4)
-
-- **Location**: `tileops/layers/{operator_name}.py`
-- **Description**: Expose the functionality as an `nn.Module` (e.g., `class FlashAttention(nn.Module)`).
-- **Docstrings**: Google Style (Class description, Init args, Forward args).
-- **Definition of Done**: The op is exposed as an `nn.Module` and verified in unit tests.
-
-### Step 5: Benchmark Results
+### Step 3: Benchmark Results
 
 - **Location**: `benchmarks/ops/bench_{operator_name}.py`
 - **Goal**: Measure Latency, TFLOPS (required) and DRAM Bandwidth (required).
@@ -88,7 +69,7 @@ We enforce high standards for code quality and consistency.
 ### Improvements & Type Safety
 
 - **Type Hints**: All function signatures (inputs and outputs) must be type-hinted.
-- **Strict Typing** *(planned)*: L2 (Op), L3 (Function) and L4 (Layer) APIs will be checked with `mypy` in strict mode in a future release.
+- **Strict Typing** *(planned)*: L2 (Op) APIs will be checked with `mypy` in strict mode in a future release.
 
 ______________________________________________________________________
 
@@ -167,21 +148,12 @@ ______________________________________________________________________
 ```text
 TileOPs/
 ├── tileops/
-│   ├── kernels/       # L1: TileLang Kernels
-│   ├── ops/           # L2: OP + Dispatcher
-│   ├── functions/     # L3: Autograd Functions
-│   ├── layers/        # L4: nn.Module
-│   └── utils/         # Utils
-├── tests/
-│   ├── test_base.py   # FixtureBase, TestBase
-│   ├── ops/           # Op-level correctness tests
-│   ├── functions/     # Function-level (fwd+bwd) tests
-│   └── layers/        # Layer-level tests
-├── benchmarks/
-│   ├── benchmark.py   # BenchmarkBase, BenchmarkReport
-│   ├── conftest.py    # Auto report generation hooks
-│   └── ops/           # Per-op benchmark definitions
-└── docs/              # Project documentation
+│   ├── kernels/   # L1: TileLang Kernels
+│   ├── ops/       # L2: OP + Dispatcher
+│   └── utils/     # Utils
+├── tests/         # Unit tests
+├── benchmarks/    # Benchmarks and performance scripts
+└── docs/          # Project documentation
 ```
 
 ## 6. Pull Request Process

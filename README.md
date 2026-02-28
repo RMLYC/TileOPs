@@ -85,7 +85,7 @@ TODO
 
 ```Python
 import torch
-from tileops.functions import gqa_decode_with_kvcache
+from tileops.ops import gqa_decode_with_kvcache
 
 # Generate inputs
 B, H, G, S_kv, D = 1, 32, 4, 1024, 128  # batch, heads, groups, seq_len, dim
@@ -94,7 +94,7 @@ q = torch.randn(B, H, D, device='cuda', dtype=dtype)
 k_cache = torch.randn(B, S_kv, G, D, device='cuda', dtype=dtype)
 v_cache = torch.randn(B, S_kv, G, D, device='cuda', dtype=dtype)
 
-# Call function, k_cache and v_cache are updated in-place
+# Call op, k_cache and v_cache are updated in-place
 output = gqa_decode_with_kvcache(q, k_cache, v_cache)
 ``` -->
 
@@ -102,9 +102,7 @@ output = gqa_decode_with_kvcache(q, k_cache, v_cache)
 
 ### Hierarchical APIs
 
-TileOPs is structured around four hierarchical key concepts, each representing a distinct level of abstraction. Higher-level components are composed from, or delegate execution to, the next lower level.
+TileOPs is structured around two hierarchical key concepts, each representing a distinct level of abstraction. Higher-level components are composed from, or delegate execution to, the next lower level.
 
-- **Layer**: A high-level, user-facing abstraction analogous to `torch.nn.Module`. It manages stateful parameters.
-- **Function**: A stateless, functional abstraction analogous to `torch.nn.functional`. Functions are fully compatible with CUDA-Graph capture, `torch.compile`, and `torch.autograd`.
 - **Op**: determines the implementation for a given shape and hardware, dispatching to the correct **Kernel** and providing unit test and benchmark. Ops are fully compatible with CUDA-Graph capture and `torch.compile`.
 - **Kernel**: Tilelang-based kernels with hardware-specific optimizations.

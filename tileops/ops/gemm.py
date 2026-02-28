@@ -36,7 +36,7 @@ class GemmOp(Op):
         self.gemv_mode = ""
 
         is_gemv_lhs_row_case = (m == 1 and not self.trans_a and self.trans_b)
-        is_gemv_rhs_col_case = (n == 1 and m != 1 and not self.trans_a and not self.trans_b)
+        is_gemv_rhs_col_case = (n == 1 and not self.trans_a and not self.trans_b)
         gemv_kernel_type = self.kernel_map.get("gemv_kernel")
         if (is_gemv_lhs_row_case or is_gemv_rhs_col_case) and gemv_kernel_type is not None:
             self.use_gemv_kernel = True

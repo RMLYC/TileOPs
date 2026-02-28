@@ -59,9 +59,10 @@ def test_gemm(m: int, n: int, k: int, dtype: torch.dtype, trans_a: bool, trans_b
     test = GemmTest(m, n, k, dtype, trans_a, trans_b)
     op = GemmOp(m, n, k, trans_a=trans_a, trans_b=trans_b, dtype=dtype, tune=tune)
     if dtype == torch.float16:
-        test.check(op, *test.gen_inputs(), atol=1e-3, rtol=1e-3)
+        tolerances = {"atol": 1e-3, "rtol": 1e-3}
     else:
-        test.check(op, *test.gen_inputs(), atol=1.6e-2, rtol=1.6e-2)
+        tolerances = {"atol": 1.6e-2, "rtol": 1.6e-2}
+    test.check(op, *test.gen_inputs(), **tolerances)
 
 
 if __name__ == "__main__":

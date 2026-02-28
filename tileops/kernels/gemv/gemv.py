@@ -78,7 +78,8 @@ def _gemv_kernel(n: int, k: int, dtype: str = "float16") -> Callable:
                             dtype="handle",
                         ))
 
-                c[bn * block_n + tn] = c_reduced[0]
+                if tk == 0 and row < n:
+                    c[row] = c_reduced[0]
 
         return _gemv_main
 

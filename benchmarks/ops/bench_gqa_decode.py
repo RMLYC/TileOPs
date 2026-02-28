@@ -22,17 +22,17 @@ class GqaDecodeBenchmark(BenchmarkBase):
         # K, V: batch * seq_len_kv * heads_kv * dim
         # Output: batch * 1 * heads * dim
         return 2 * t.batch * t.dim * t.dtype.itemsize * (
-            t.heads + t.groups * t.seq_len_kv)
+            t.heads + t.heads_kv * t.seq_len_kv)
 
 
 @GqaDecodeFixture
-def test_gqa_decode_bench(b: int, h: int, g: int, s_kv: int, d: int, dtype: torch.dtype,
-                          tune: bool) -> None:
-    test = GqaDecodeTest(b, h, g, s_kv, d, dtype)
+def test_gqa_decode_bench(batch: int, heads: int, heads_kv: int, seq_len_kv: int, dim: int,
+                          dtype: torch.dtype, tune: bool) -> None:
+    test = GqaDecodeTest(batch, heads, heads_kv, seq_len_kv, dim, dtype)
     bm = GqaDecodeBenchmark(test)
     inputs = test.gen_inputs()
 
-    op = GroupQueryAttentionDecodeWithKVCacheOp(b, h, g, s_kv, d, dtype, tune=tune)
+    op = GroupQueryAttentionDecodeWithKVCacheOp(batch, heads, heads_kv, seq_len_kv, dim, dtype, tune=tune)
     result = bm.profile(op, *inputs)
     BenchmarkReport.record("gqa_decode", locals(), result, tag="tileops")
 

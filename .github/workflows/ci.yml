@@ -10,8 +10,9 @@ on:
   pull_request:
     branches: [main]
     types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
   schedule:
-    - cron: "0 2 * * *"
+    - cron: "0 18 * * *"
 
 concurrency:
   # Keep only the newest run for the same PR or branch ref.
@@ -45,7 +46,7 @@ jobs:
           extra_args: --all-files --show-diff-on-failure
 
   packaging:
-    if: ${{ github.repository == 'tile-ai/TileOPs' && github.event_name == 'schedule' }}
+    if: ${{ github.repository == 'tile-ai/TileOPs' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
     runs-on: [self-hosted, tile-ops, venv]
     steps:
       - name: Checkout code

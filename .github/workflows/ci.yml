@@ -95,7 +95,12 @@ jobs:
           source "${{ runner.tool_cache }}/${VENV_DIR}/bin/activate"
           pip install --force-reinstall dist/*.whl
 
-          cat <<'PY' > /tmp/test_tileops_wheel.py
+          # Ensure imports resolve from installed wheel, not repo source tree.
+          TMP_TEST_DIR="$(mktemp -d)"
+          trap 'rm -rf "${TMP_TEST_DIR}"' EXIT
+          unset PYTHONPATH || true
+
+          cat <<'PY' > "${TMP_TEST_DIR}/test_tileops_wheel.py"
           import importlib.metadata
           from pathlib import Path
 
@@ -110,7 +115,8 @@ jobs:
           assert version
           PY
 
-          python -m pytest -q /tmp/test_tileops_wheel.py
+          cd "${TMP_TEST_DIR}"
+          python -m pytest -q test_tileops_wheel.py
         shell: bash
 
       - name: Upload wheel artifact

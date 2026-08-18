@@ -57,6 +57,7 @@ from .gemm import GemmFp8BlockScaledKernel, GemmFp8EpilogueKernel, GemmKernel, G
 from .gla import GLABwdKernel, GLAFwdKernel
 from .gla_recurrence import GLADecodeFP32Kernel, GLADecodeKernel
 from .grouped_gemm import GroupedGemmKernel
+from .kda_recurrence import KDARecurrentFwdKernel
 from .kernel_base import Kernel
 from .mhc import MHCPostKernel, MHCPreKernel
 from .moe import MoePermuteAlignKernel
@@ -162,6 +163,7 @@ __all__ = [
     "GroupConv3dKernel",
     "GroupNormKernel",
     "GroupedGemmKernel",
+    "KDARecurrentFwdKernel",
     "Kernel",
     "LayerNormKernel",
     "MHADecodeKernel",

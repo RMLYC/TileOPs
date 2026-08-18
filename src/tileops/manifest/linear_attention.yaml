@@ -233,6 +233,65 @@ GLADecodeOp:
     bench: benchmarks/ops/bench_gla_recurrence.py
     bench_manifest_driven: true
 
+KDARecurrentFwdOp:
+  # Full-sequence recurrent forward for Kimi Delta Attention (KDA), the
+  # per-channel-decay generalization of the gated delta rule. Semantics align
+  # with FLA `fla.ops.kda.fused_recurrent_kda` (BTHD layout, H == HV, plain
+  # log-decay g): per step,
+  #   S <- S * exp(g_t)[:, None]; S <- S + beta_t k_t (v_t - S^T k_t)^T;
+  #   o_t = scale * S^T q_t
+  # with scale <= 0 resolving to DK ** -0.5 at op construction. State
+  # ownership is functional: initial_state is read, final_state returned.
+  ref_api: "none"
+  family: linear_attention
+  status: implemented
+
+  signature:
+    inputs:
+      q: {dtype: "float16 | bfloat16 | float32", shape: "[B, S, H, DK]"}
+      k: {dtype: "same_as(q)", shape: "[B, S, H, DK]"}
+      v: {dtype: "same_as(q)", shape: "[B, S, H, DV]"}
+      g: {dtype: "same_as(q)", shape: "[B, S, H, DK]"}
+      beta: {dtype: "same_as(q)", shape: "[B, S, H]"}
+      initial_state: {dtype: "same_as(q)", shape: "[B, H, DK, DV]"}
+    outputs:
+      o: {dtype: "same_as(q)", shape: "[B, S, H, DV]"}
+      final_state: {dtype: "same_as(q)", shape: "[B, H, DK, DV]"}
+    params:
+      scale: {type: float, default: -1.0}
+    shape_rules:
+    - "q.shape == (B, S, H, DK)"
+    - "k.shape == (B, S, H, DK)"
+    - "v.shape == (B, S, H, DV)"
+    - "g.shape == (B, S, H, DK)"
+    - "beta.shape == (B, S, H)"
+    - "initial_state.shape == (B, H, DK, DV)"
+    - "o.shape == (B, S, H, DV)"
+    - "final_state.shape == (B, H, DK, DV)"
+
+  workloads:
+    # Kimi Linear style rows: KDA heads use DK=DV=128. The recurrent path
+    # targets decode / short-to-medium sequences; the chunked variant is the
+    # long-context training path. The pure-torch reference baseline keeps S
+    # moderate.
+  - {q_shape: [1, 1024, 16, 128], k_shape: [1, 1024, 16, 128], v_shape: [1, 1024, 16, 128], g_shape: [1, 1024, 16, 128], beta_shape: [1, 1024, 16], initial_state_shape: [1, 16, 128, 128], dtypes: [float16, bfloat16], label: "kda-recurrent-b1-s1k-h16-d128"}
+  - {q_shape: [1, 2048, 16, 128], k_shape: [1, 2048, 16, 128], v_shape: [1, 2048, 16, 128], g_shape: [1, 2048, 16, 128], beta_shape: [1, 2048, 16], initial_state_shape: [1, 16, 128, 128], dtypes: [float16, bfloat16], label: "kda-recurrent-b1-s2k-h16-d128"}
+  - {q_shape: [1, 4096, 16, 128], k_shape: [1, 4096, 16, 128], v_shape: [1, 4096, 16, 128], g_shape: [1, 4096, 16, 128], beta_shape: [1, 4096, 16], initial_state_shape: [1, 16, 128, 128], dtypes: [float16, bfloat16], label: "kda-recurrent-b1-s4k-h16-d128"}
+  - {q_shape: [1, 2048, 32, 128], k_shape: [1, 2048, 32, 128], v_shape: [1, 2048, 32, 128], g_shape: [1, 2048, 32, 128], beta_shape: [1, 2048, 32], initial_state_shape: [1, 32, 128, 128], dtypes: [float16, bfloat16], label: "kda-recurrent-b1-s2k-h32-d128"}
+  - {q_shape: [8, 2048, 32, 128], k_shape: [8, 2048, 32, 128], v_shape: [8, 2048, 32, 128], g_shape: [8, 2048, 32, 128], beta_shape: [8, 2048, 32], initial_state_shape: [8, 32, 128, 128], dtypes: [float16, bfloat16], label: "kda-recurrent-b8-s2k-h32-d128"}
+
+  roofline:
+    func: "tileops.perf.formulas.kda_recurrent_fwd_roofline"
+
+  source:
+    kernel: tileops/kernels/kda_recurrence.py
+    kernel_map:
+      KDARecurrentFwdKernel: KDARecurrentFwdKernel
+    op: tileops/ops/kda.py
+    test: tests/ops/test_kda_recurrence.py
+    bench: benchmarks/ops/bench_kda_recurrence.py
+    bench_manifest_driven: true
+
 # The remaining code-present chunkwise/training Linear Attention surfaces are
 # intentionally spec-only for this pass. They expose backward-only artifacts
 # (Aw/Au/w/u/h) or optional initial/final state choices that need a separate

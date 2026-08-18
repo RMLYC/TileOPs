@@ -302,6 +302,31 @@ def gla_decode_roofline(op: Any | None = None, **kwargs: Any) -> tuple[int, int]
     return int(flops), int(nbytes * elem_bytes)
 
 
+def kda_recurrent_fwd_roofline(op: Any | None = None, **kwargs: Any) -> tuple[int, int]:
+    """Roofline for full-sequence KDA recurrent forward."""
+    data = _shape_or_attrs(op, kwargs)
+    if "q_shape" in data:
+        batch, seq_len, heads, dim_k = data["q_shape"]
+        dim_v = data["v_shape"][-1]
+    else:
+        batch, seq_len, heads, dim_k, dim_v = (
+            data["batch"],
+            data["seq_len"],
+            data["heads"],
+            data["dim_k"],
+            data["dim_v"],
+        )
+    elem_bytes = _dtype_itemsize(data.get("dtype", data.get("dtypes", "float16")))
+
+    # Per step: decay (DK*DV mul) + old = S^T k (2*DK*DV) + v_new (2*DV)
+    # + state update (2*DK*DV) + o = S^T q (2*DK*DV) + exp (DK).
+    flops = batch * heads * seq_len * (7 * dim_k * dim_v + 2 * dim_k + 2 * dim_v)
+    # Per step: read q/k/g (3*DK) + v (DV) + beta (1), write o (DV);
+    # once: read initial_state, write final_state (2*DK*DV).
+    nbytes = batch * heads * (seq_len * (3 * dim_k + 2 * dim_v + 1) + 2 * dim_k * dim_v)
+    return int(flops), int(nbytes * elem_bytes)
+
+
 def _distribute_total(total: int, batch: int, max_len: int) -> list[int]:
     lengths = [0] * batch
     remaining = total

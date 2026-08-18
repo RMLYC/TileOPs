@@ -43,6 +43,7 @@ from .gated_linear_attn import GLADecodeOp
 from .gemm import GemmFp8Op, GemmOp, GemmW4A16Op
 from .gla import GLABwdOp, GLAFwdOp
 from .grouped_gemm import GroupedGemmOp
+from .kda import KDARecurrentFwdOp
 from .mamba2_fwd import Mamba2FwdOp
 from .mhc import MHCPostOp, MHCPreOp
 from .moe import MoePermuteAlignFwdOp
@@ -168,6 +169,7 @@ __all__ = [
     "GroupNormFwdOp",
     "GroupedGemmOp",
     "InstanceNormFwdOp",
+    "KDARecurrentFwdOp",
     "LayerNormFwdOp",
     "MHCPostOp",
     "MHCPreOp",

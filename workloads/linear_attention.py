@@ -277,6 +277,50 @@ class GatedDeltaNetDecodeWorkload(WorkloadBase):
         return o.to(self.dtype), new_state.to(self.dtype)
 
 
+class KDARecurrentFwdWorkload(WorkloadBase):
+
+    def __init__(
+        self,
+        batch: int,
+        seq_len: int,
+        heads: int,
+        dim_k: int,
+        dim_v: int,
+        dtype: torch.dtype,
+        scale: float = -1.0,
+    ) -> None:
+        self.batch = batch
+        self.seq_len = seq_len
+        self.heads = heads
+        self.dim_k = dim_k
+        self.dim_v = dim_v
+        self.dtype = dtype
+        self.scale = scale
+
+    def gen_inputs(self) -> tuple[torch.Tensor, ...]:
+        B, S, H, DK, DV = self.batch, self.seq_len, self.heads, self.dim_k, self.dim_v
+        q = torch.randn(B, S, H, DK, device="cuda", dtype=self.dtype) * 0.1
+        k = torch.randn(B, S, H, DK, device="cuda", dtype=self.dtype) * 0.1
+        v = torch.randn(B, S, H, DV, device="cuda", dtype=self.dtype) * 0.1
+        g = -torch.rand(B, S, H, DK, device="cuda", dtype=self.dtype)
+        beta = torch.rand(B, S, H, device="cuda", dtype=self.dtype) * 0.5
+        initial_state = torch.randn(B, H, DK, DV, device="cuda", dtype=self.dtype) * 0.1
+        return q, k, v, g, beta, initial_state
+
+    def ref_program(
+        self,
+        q: torch.Tensor,
+        k: torch.Tensor,
+        v: torch.Tensor,
+        g: torch.Tensor,
+        beta: torch.Tensor,
+        initial_state: torch.Tensor,
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        o, final_state = kda_recurrent_fwd_torch(
+            q, k, v, g, beta, initial_state, self.scale)
+        return o.to(self.dtype), final_state.to(self.dtype)
+
+
 class GLAChunkwiseWorkload(WorkloadBase):
     def __init__(self, batch, seq_len, heads, dim_k, dim_v, chunk_size, dtype):
         self.batch = batch
@@ -498,3 +542,39 @@ def gla_decode_torch(
     o = scale * torch.einsum("bhk,bhkv->bhv", q, new_state)
 
     return o, new_state
+
+
+def kda_recurrent_fwd_torch(
+    q: torch.Tensor,
+    k: torch.Tensor,
+    v: torch.Tensor,
+    g: torch.Tensor,
+    beta: torch.Tensor,
+    initial_state: torch.Tensor,
+    scale: float = -1.0,
+) -> tuple[torch.Tensor, torch.Tensor]:
+    """Pure-PyTorch reference for full-sequence KDA recurrence (BTHD layout).
+
+    Per step: S <- S * exp(g_t)[:, None]; S <- S + beta_t k_t (v_t - S^T k_t)^T;
+    o_t = scale * S^T q_t.
+    """
+    DK = q.shape[-1]
+    if scale <= 0:
+        scale = DK ** -0.5
+
+    q, k, v = q.float(), k.float(), v.float()
+    g, beta = g.float(), beta.float()
+    state = initial_state.float().clone()
+
+    B, S_len, H, _ = q.shape
+    DV = v.shape[-1]
+    o = torch.empty(B, S_len, H, DV, dtype=torch.float32, device=q.device)
+    for t in range(S_len):
+        alpha = torch.exp(g[:, t])  # [B, H, DK]
+        state = state * alpha.unsqueeze(-1)
+        old = torch.einsum("bhkv,bhk->bhv", state, k[:, t])
+        v_new = beta[:, t].unsqueeze(-1) * (v[:, t] - old)
+        state = state + k[:, t].unsqueeze(-1) * v_new.unsqueeze(-2)
+        o[:, t] = scale * torch.einsum("bhkv,bhk->bhv", state, q[:, t])
+
+    return o, state
